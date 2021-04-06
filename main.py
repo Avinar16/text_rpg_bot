@@ -1,9 +1,10 @@
 # Импортируем необходимые классы.
 from dotenv import load_dotenv
 from telegram.ext import Updater, MessageHandler, Filters
-from telegram.ext import CallbackContext, CommandHandler
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, User
+from telegram.ext import CallbackContext, CommandHandler, ConversationHandler
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from data import db_session
+from data.users import User
 from library.register_user import register
 
 import os
@@ -11,45 +12,69 @@ import os
 load_dotenv()
 db_session.global_init("db/rpg.db")
 
-reply_keyboard = [['/start', '/help', '/StartGame'],
-                  ]
-markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
-
-
-def close_keyboard(update, context):
-    update.message.reply_text(
-        "Ok",
-        reply_markup=ReplyKeyboardRemove()
-    )
-
 
 def StartGame(update, context):
+    db_sess = db_session.create_session()
+
     update.message.reply_text('Здесь могла бы быть ваша реклама')
 
 
-# Определяем функцию-обработчик сообщений.
-# У неё два параметра, сам бот и класс updater, принявший сообщение.
-def echo(update, context):
-    # У объекта класса Updater есть поле message,
-    # являющееся объектом сообщения.
-    # У message есть поле text, содержащее текст полученного сообщения,
-    # а также метод reply_text(str),
-    # отсылающий ответ пользователю, от которого получено сообщение.
-    update.message.reply_text(update.message.text)
+def Record(update, context):
+    db_sess = db_session.create_session()
+    best_score = db_sess.query(User).filter(User.tg_id == update.effective_user.id).first().best_score
+    update.message.reply_text(f'Ваш рекорд - {best_score}')
+
+    return ingame_check(update, context)
 
 
 # Напишем соответствующие функции.
 # Их сигнатура и поведение аналогичны обработчикам текстовых сообщений.
 def start(update, context):
+    db_sess = db_session.create_session()
+    current_user = db_sess.query(User).filter(User.tg_id == update.effective_user.id).first()
+    reply_keyboard = [['/help', '/StartGame', '/Record'],
+                      ]
+    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
     update.message.reply_text(
         "Welcome",
         reply_markup=markup
     )
     register(db_session, update)
 
+    return ingame_check(update, context)
+
 
 def help(update, context):
+    db_sess = db_session.create_session()
+    current_user = db_sess.query(User).filter(User.tg_id == update.effective_user.id).first()
+
+    if not current_user.in_game:
+        update.message.reply_text(
+            """
+            /StartGame - Начать игру
+            /Record - Показать рекорд
+            """
+        )
+    else:
+        print(f'player {current_user.id} in game')
+
     update.message.reply_text("Help ksta")
+
+    return ingame_check(update, context)
+
+
+def cancel(update, context):
+    update.message.reply_text("closed")
+
+
+def ingame_check(update, context):
+    db_sess = db_session.create_session()
+    current_user = db_sess.query(User).filter(User.tg_id == update.effective_user.id).first()
+
+    if current_user.in_game:
+        return 2
+    else:
+        return 1
 
 
 def main():
@@ -60,28 +85,24 @@ def main():
     # Получаем из него диспетчер сообщений.
     dp = updater.dispatcher
 
-    # Создаём обработчик сообщений типа Filters.text
-    # из описанной выше функции echo()
-    # После регистрации обработчика в диспетчере
-    # эта функция будет вызываться при получении сообщения
-    # с типом "текст", т. е. текстовых сообщений.
-    text_handler = MessageHandler(Filters.text, echo)
-    # Регистрируем обработчики в диспетчере.
-    # Первым параметром конструктора CommandHandler я
-    # вляется название команды.
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("help", help))
-    dp.add_handler(CommandHandler("StartGame", StartGame))
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('start', start)],
 
-    dp.add_handler(CommandHandler("close", close_keyboard))
+        states={
+            1: [CommandHandler("help", help), CommandHandler("Record", Record),
+                CommandHandler("StartGame", StartGame, pass_user_data=True)],
+            2: [MessageHandler(Filters.text, help)],
 
-    dp.add_handler(text_handler)
+        },
+        fallbacks=[CommandHandler('cancel', cancel)],
+    )
+
+    dp.add_handler(conv_handler)
 
     # Запускаем цикл приема и обработки сообщений.
+
     updater.start_polling()
 
-    # Ждём завершения приложения.
-    # (например, получения сигнала SIG_TERM при нажатии клавиш Ctrl+C)
     updater.idle()
 
 

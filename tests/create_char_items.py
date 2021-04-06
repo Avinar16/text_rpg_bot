@@ -14,16 +14,18 @@ db_sess.commit()
 
 """
 character = db_sess.query(Character).first()  # наш персонаж
+print(character)
 item1 = db_sess.query(Items).filter(Items.id == 1).first()
 item2 = db_sess.query(Items).filter(Items.id == 2).first()
 
-character.inventory.append(item1)  # добавили персонажу в инвентарь item1
-character.inventory.append(item2)  # добавили персонажу в инвентарь item2
+# character.inventory.append(item1)  # добавили персонажу в инвентарь item1
+# character.inventory.append(item2)  # добавили персонажу в инвентарь item2
 
+""""
 print("После добавления")
 for item in character.inventory:
     print(item.to_dict(only=['name', 'description']))
 character.inventory.remove(item1)  # удалили item1
 print("После удаления")
 for item in character.inventory:
-    print(item.to_dict(only=['name', 'description']))
+    print(item.to_dict(only=['name', 'description'])) """

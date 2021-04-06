@@ -13,5 +13,6 @@ def register(db_sess, update):
         db_sess.add(user)
         db_sess.commit()
     except sqlalchemy.exc.IntegrityError:
-        print("User's already exist " + str(update.effective_user.id))
+        pass
+# User's already exist
 
