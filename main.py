@@ -6,7 +6,11 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from data import db_session
 from data.users import User
 from library.register_user import register
-from library.Game import Game
+from library.get_data import get_data
+from library.GameHandler import game_handler
+
+# debug funcs
+from library.debug_func.user_default import user_default
 
 import os
 
@@ -15,13 +19,17 @@ db_session.global_init("db/rpg.db")
 
 
 def StartGame(update, context):
-    db_sess = db_session.create_session()
-    Game(update)
+    user, db_sess = get_data(update, db_session, return_sess=True)
+    print(user.in_game)
+    user.in_game = True
+    print(user.in_game)
+    db_sess.commit()
+
     update.message.reply_text('Здесь могла бы быть ваша реклама')
 
 
 def Record(update, context):
-    best_score = get_data(update).best_score
+    best_score = get_data(update, db_session).best_score
     update.message.reply_text(f'Ваш рекорд - {best_score}')
 
     return ingame_check(update, context)
@@ -30,7 +38,7 @@ def Record(update, context):
 # Напишем соответствующие функции.
 # Их сигнатура и поведение аналогичны обработчикам текстовых сообщений.
 def start(update, context):
-    current_user = get_data(update)
+    current_user = get_data(update, db_session)
     reply_keyboard = [['/help', '/StartGame', '/Record'],
                       ]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
@@ -43,14 +51,8 @@ def start(update, context):
     return ingame_check(update, context)
 
 
-def get_data(update):
-    db_sess = db_session.create_session()
-    current_user = db_sess.query(User).filter(User.tg_id == update.effective_user.id).first()
-    return current_user
-
-
 def help(update, context):
-    current_user = get_data(update)
+    current_user = get_data(update, db_session)
     if not current_user.in_game:
         update.message.reply_text(
             """
@@ -60,6 +62,7 @@ def help(update, context):
         )
     else:
         print(f'player {current_user.id} in game')
+        user_default(update, db_session)
 
     update.message.reply_text("Help ksta")
 
@@ -71,7 +74,7 @@ def cancel(update, context):
 
 
 def ingame_check(update, context):
-    current_user = get_data(update)
+    current_user = get_data(update, db_session)
     if current_user.in_game:
         return 2
     else:
@@ -91,10 +94,10 @@ def main():
         states={
             1: [CommandHandler("help", help), CommandHandler("Record", Record),
                 CommandHandler("StartGame", StartGame, pass_user_data=True)],
-            2: [MessageHandler(Filters.text, help)],
+            2: [game_handler],
 
         },
-        fallbacks=[CommandHandler('cancel', cancel)],
+        fallbacks=[],
     )
 
     dp.add_handler(conv_handler)
