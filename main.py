@@ -6,22 +6,22 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from data import db_session
 from data.users import User
 from library.register_user import register
+from library.Game import Game
 
 import os
 
-load_dotenv()
+load_dotenv('.env')
 db_session.global_init("db/rpg.db")
 
 
 def StartGame(update, context):
     db_sess = db_session.create_session()
-
+    Game(update)
     update.message.reply_text('Здесь могла бы быть ваша реклама')
 
 
 def Record(update, context):
-    db_sess = db_session.create_session()
-    best_score = db_sess.query(User).filter(User.tg_id == update.effective_user.id).first().best_score
+    best_score = get_data(update).best_score
     update.message.reply_text(f'Ваш рекорд - {best_score}')
 
     return ingame_check(update, context)
@@ -30,8 +30,7 @@ def Record(update, context):
 # Напишем соответствующие функции.
 # Их сигнатура и поведение аналогичны обработчикам текстовых сообщений.
 def start(update, context):
-    db_sess = db_session.create_session()
-    current_user = db_sess.query(User).filter(User.tg_id == update.effective_user.id).first()
+    current_user = get_data(update)
     reply_keyboard = [['/help', '/StartGame', '/Record'],
                       ]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
@@ -44,10 +43,14 @@ def start(update, context):
     return ingame_check(update, context)
 
 
-def help(update, context):
+def get_data(update):
     db_sess = db_session.create_session()
     current_user = db_sess.query(User).filter(User.tg_id == update.effective_user.id).first()
+    return current_user
 
+
+def help(update, context):
+    current_user = get_data(update)
     if not current_user.in_game:
         update.message.reply_text(
             """
@@ -68,9 +71,7 @@ def cancel(update, context):
 
 
 def ingame_check(update, context):
-    db_sess = db_session.create_session()
-    current_user = db_sess.query(User).filter(User.tg_id == update.effective_user.id).first()
-
+    current_user = get_data(update)
     if current_user.in_game:
         return 2
     else:
@@ -84,7 +85,6 @@ def main():
 
     # Получаем из него диспетчер сообщений.
     dp = updater.dispatcher
-
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
 
