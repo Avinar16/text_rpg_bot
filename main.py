@@ -24,12 +24,12 @@ def StartGame(update, context):
     db_sess.commit()
 
     # user_default(update, db_session)
-
-    update.message.reply_text(f'user {user.tg_id} in game={user.in_game}')
     update.message.reply_text(""" Добро пожаловать в EndlessDungeon
                                   Как назвать вашего персонажа?""")
+    update.message.reply_text(f'user {user.tg_id} in game={user.in_game}')
+
     # запуск создания персонажа
-    return register_char(update, context, db_session)
+    return ingame_check(update, context)
 
 
 def Record(update, context):
@@ -43,7 +43,7 @@ def Record(update, context):
 # Их сигнатура и поведение аналогичны обработчикам текстовых сообщений.
 def start(update, context):
     # Регистрация/приветствие юзера/ отправка клавиатуры
-    register_user(db_session, update)
+    register_user(update)
 
     return ingame_check(update, context)
 
@@ -83,8 +83,8 @@ def main():
         entry_points=[CommandHandler('start', start)],
 
         states={
-            1: [CommandHandler("StartGame", StartGame, pass_user_data=True)],
-            2: [game_handler],
+            1: [CommandHandler("StartGame", StartGame)],
+            2: [MessageHandler(filters=Filters.text, callback=register_char)],
 
         },
         fallbacks=[],

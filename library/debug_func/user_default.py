@@ -1,7 +1,8 @@
 from data.users import User
+from data import db_session
 
 
-def user_default(update, db_session):
+def user_default(update):
     db_sess = db_session.create_session()
     current_user = db_sess.query(User).filter(User.tg_id == update.effective_user.id).first()
     current_user.in_game = False

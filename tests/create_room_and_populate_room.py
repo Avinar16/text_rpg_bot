@@ -1,7 +1,7 @@
 from data import db_session
 from data.character import Character
 from data.items import Items
-from data.room_list import Rooms
+from data.rooms import Rooms
 from data.mobs import Mobs
 
 """
