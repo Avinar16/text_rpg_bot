@@ -4,8 +4,7 @@ from telegram.ext import Updater, MessageHandler, Filters
 from telegram.ext import CallbackContext, CommandHandler, ConversationHandler
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from data import db_session
-from data.users import User
-from library.register_user import register
+from library.registration import register_char, register_user
 from library.get_data import get_data
 from library.GameHandler import game_handler
 
@@ -19,13 +18,18 @@ db_session.global_init("db/rpg.db")
 
 
 def StartGame(update, context):
+    # Запуск флага "in_game"
     user, db_sess = get_data(update, db_session, return_sess=True)
-    print(user.in_game)
     user.in_game = True
-    print(user.in_game)
     db_sess.commit()
 
-    update.message.reply_text('Здесь могла бы быть ваша реклама')
+    # user_default(update, db_session)
+
+    update.message.reply_text(f'user {user.tg_id} in game={user.in_game}')
+    update.message.reply_text(""" Добро пожаловать в EndlessDungeon
+                                  Как назвать вашего персонажа?""")
+    # запуск создания персонажа
+    return register_char(update, context, db_session)
 
 
 def Record(update, context):
@@ -38,15 +42,8 @@ def Record(update, context):
 # Напишем соответствующие функции.
 # Их сигнатура и поведение аналогичны обработчикам текстовых сообщений.
 def start(update, context):
-    current_user = get_data(update, db_session)
-    reply_keyboard = [['/help', '/StartGame', '/Record'],
-                      ]
-    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
-    update.message.reply_text(
-        "Welcome",
-        reply_markup=markup
-    )
-    register(db_session, update)
+    # Регистрация/приветствие юзера/ отправка клавиатуры
+    register_user(db_session, update)
 
     return ingame_check(update, context)
 
@@ -64,13 +61,7 @@ def help(update, context):
         print(f'player {current_user.id} in game')
         user_default(update, db_session)
 
-    update.message.reply_text("Help ksta")
-
     return ingame_check(update, context)
-
-
-def cancel(update, context):
-    update.message.reply_text("closed")
 
 
 def ingame_check(update, context):
@@ -92,14 +83,15 @@ def main():
         entry_points=[CommandHandler('start', start)],
 
         states={
-            1: [CommandHandler("help", help), CommandHandler("Record", Record),
-                CommandHandler("StartGame", StartGame, pass_user_data=True)],
+            1: [CommandHandler("StartGame", StartGame, pass_user_data=True)],
             2: [game_handler],
 
         },
         fallbacks=[],
     )
 
+    dp.add_handler(CommandHandler("Record", Record))
+    dp.add_handler(CommandHandler("help", help))
     dp.add_handler(conv_handler)
 
     # Запускаем цикл приема и обработки сообщений.

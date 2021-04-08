@@ -13,12 +13,15 @@ class Character(SqlAlchemyBase, SerializerMixin):
     room_id = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("rooms.id"))  # внешний ключ на таблицу с комнатами
     name = sqlalchemy.Column(sqlalchemy.String, nullable=False, unique=True)
+
     room = orm.relation('Rooms', backref="character")
 
-    # в свойстве room у объекта Character будет объект из модели Rooms,
-    # backref - в модели Rooms будет поле character, где будет соответствующий персонаж, который сейчас в комнате
-    # инвентарь персонажа, связь многие ко многим с моделью Items через вспомогательную таблицу inventory
-    # (Смотри файл items.py)
+    hp = sqlalchemy.Column(sqlalchemy.Integer, default=5)
+    max_hp = sqlalchemy.Column(sqlalchemy.Integer, default=5)
+
+    level = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+    exp = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+
     inventory = orm.relation("Items",
                              secondary="inventory",
                              backref="items")

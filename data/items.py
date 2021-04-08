@@ -12,7 +12,9 @@ inventory = sqlalchemy.Table(
                       sqlalchemy.ForeignKey('character.id')),
     # items.id
     sqlalchemy.Column('item_id', sqlalchemy.Integer,
-                      sqlalchemy.ForeignKey('items.id'))
+                      sqlalchemy.ForeignKey('items.id')),
+
+    sqlalchemy.Column('is_equiped', sqlalchemy.Boolean, default=False)
 )
 items_in_room = sqlalchemy.Table(
     'items_in_room',  # название промежуточной таблицы в базе
@@ -25,6 +27,7 @@ items_in_room = sqlalchemy.Table(
                       sqlalchemy.ForeignKey('items.id'))
 )
 
+
 class Items(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'items'
 
@@ -32,4 +35,4 @@ class Items(SqlAlchemyBase, SerializerMixin):
                            primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     description = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    stats = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    item_type_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('item_types.id'))
