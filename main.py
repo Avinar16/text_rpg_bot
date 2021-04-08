@@ -19,11 +19,11 @@ db_session.global_init("db/rpg.db")
 
 def StartGame(update, context):
     # Запуск флага "in_game"
-    user, db_sess = get_data(update, db_session, return_sess=True)
+    user, db_sess = get_data(update, return_sess=True)
     user.in_game = True
     db_sess.commit()
 
-    # user_default(update, db_session)
+    # user_default(update)
     update.message.reply_text(""" Добро пожаловать в EndlessDungeon
                                   Как назвать вашего персонажа?""")
     update.message.reply_text(f'user {user.tg_id} in game={user.in_game}')
@@ -33,7 +33,7 @@ def StartGame(update, context):
 
 
 def Record(update, context):
-    best_score = get_data(update, db_session).best_score
+    best_score = get_data(update).best_score
     update.message.reply_text(f'Ваш рекорд - {best_score}')
 
     return ingame_check(update, context)
@@ -49,7 +49,7 @@ def start(update, context):
 
 
 def help(update, context):
-    current_user = get_data(update, db_session)
+    current_user = get_data(update)
     if not current_user.in_game:
         update.message.reply_text(
             """
@@ -59,13 +59,13 @@ def help(update, context):
         )
     else:
         print(f'player {current_user.id} in game')
-        user_default(update, db_session)
+        user_default(update)
 
     return ingame_check(update, context)
 
 
 def ingame_check(update, context):
-    current_user = get_data(update, db_session)
+    current_user = get_data(update)
     if current_user.in_game:
         return 2
     else:
