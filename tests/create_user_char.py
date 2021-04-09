@@ -1,7 +1,7 @@
 from data import db_session
 from data.users import User
 from data.character import Character
-import random
+
 
 db_session.global_init("../rpg.db")
 db_sess = db_session.create_session()

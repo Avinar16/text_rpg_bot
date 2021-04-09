@@ -2,7 +2,6 @@ from data.users import User
 from data.character import Character
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from data import db_session
-from library.debug_func.user_default import user_default
 from library.debug_func.char_defaut import char_default
 
 

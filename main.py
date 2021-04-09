@@ -2,12 +2,9 @@
 from dotenv import load_dotenv
 from telegram.ext import Updater, MessageHandler, Filters
 from telegram.ext import CallbackContext, CommandHandler, ConversationHandler
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from data import db_session
 from library.registration import register_char, register_user
 from library.get_data import get_data_user, get_data_character
-from library.GameHandler import game_handler
-from library.User_Character import User_Interaction_with_Character
 
 # debug funcs
 from library.debug_func.user_default import user_default
