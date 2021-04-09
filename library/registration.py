@@ -1,11 +1,12 @@
 from data.users import User
+from data.character import Character
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from data import db_session
 from library.debug_func.user_default import user_default
 
 
 def register_user(update):
-    reply_keyboard = [['/help', '/StartGame', '/Record'],
+    reply_keyboard = [['/help', '/start', '/Record'],
                       ]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
 
@@ -20,7 +21,7 @@ def register_user(update):
         db_sess.add(user)
         db_sess.commit()
 
-    update.message.reply_text(f'Welcome {user_info["first_name"]}',
+    update.message.reply_text(f'Добро пожаловать в EndlessDungeon, {user_info["first_name"]}!',
                               reply_markup=markup)
 
 

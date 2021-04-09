@@ -17,26 +17,9 @@ load_dotenv('.env')
 db_session.global_init("db/rpg.db")
 
 
-def StartGame(update, context):
-    # Запуск флага "in_game"
-    user, db_sess = get_data(update, return_sess=True)
-    user.in_game = True
-    db_sess.commit()
-
-    # user_default(update)
-    update.message.reply_text(""" Добро пожаловать в EndlessDungeon
-                                  Как назвать вашего персонажа?""")
-    update.message.reply_text(f'user {user.tg_id} in game={user.in_game}')
-
-    # запуск создания персонажа
-    return ingame_check(update, context)
-
-
 def Record(update, context):
     best_score = get_data(update).best_score
     update.message.reply_text(f'Ваш рекорд - {best_score}')
-
-    return ingame_check(update, context)
 
 
 # Напишем соответствующие функции.
@@ -45,7 +28,16 @@ def start(update, context):
     # Регистрация/приветствие юзера/ отправка клавиатуры
     register_user(update)
 
-    return ingame_check(update, context)
+    # Запуск флага "in_game"
+    user, db_sess = get_data(update, return_sess=True)
+    user.in_game = True
+    db_sess.commit()
+
+    # user_default(update)
+    update.message.reply_text("""Как назвать вашего персонажа?""")
+    update.message.reply_text(f'user {user.tg_id} in game={user.in_game}')
+
+    return 1
 
 
 def help(update, context):
@@ -53,7 +45,6 @@ def help(update, context):
     if not current_user.in_game:
         update.message.reply_text(
             """
-            /StartGame - Начать игру
             /Record - Показать рекорд
             """
         )
@@ -61,15 +52,13 @@ def help(update, context):
         print(f'player {current_user.id} in game')
         user_default(update)
 
-    return ingame_check(update, context)
-
 
 def ingame_check(update, context):
     current_user = get_data(update)
     if current_user.in_game:
-        return 2
-    else:
         return 1
+    else:
+        return 2
 
 
 def main():
@@ -83,8 +72,8 @@ def main():
         entry_points=[CommandHandler('start', start)],
 
         states={
-            1: [CommandHandler("StartGame", StartGame)],
-            2: [MessageHandler(filters=Filters.text, callback=register_char)],
+            1: [MessageHandler(filters=Filters.text, callback=register_char)],
+            2: [],
 
         },
         fallbacks=[],
