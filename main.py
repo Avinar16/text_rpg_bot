@@ -5,8 +5,9 @@ from telegram.ext import CallbackContext, CommandHandler, ConversationHandler
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from data import db_session
 from library.registration import register_char, register_user
-from library.get_data import get_data
+from library.get_data import get_data_user, get_data_character
 from library.GameHandler import game_handler
+from library.User_Character import User_Interaction_with_Character
 
 # debug funcs
 from library.debug_func.user_default import user_default
@@ -18,7 +19,7 @@ db_session.global_init("db/rpg.db")
 
 
 def Record(update, context):
-    best_score = get_data(update).best_score
+    best_score = get_data_user(update).best_score
     update.message.reply_text(f'Ваш рекорд - {best_score}')
 
 
@@ -29,7 +30,8 @@ def start(update, context):
     register_user(update)
 
     # Запуск флага "in_game"
-    user, db_sess = get_data(update, return_sess=True)
+    user, db_sess = get_data_user(update, return_sess=True)
+    chracter = get_data_character(update)
     user.in_game = True
     db_sess.commit()
 
@@ -41,7 +43,7 @@ def start(update, context):
 
 
 def help(update, context):
-    current_user = get_data(update)
+    current_user = get_data_user(update)
     if not current_user.in_game:
         update.message.reply_text(
             """
@@ -54,7 +56,7 @@ def help(update, context):
 
 
 def ingame_check(update, context):
-    current_user = get_data(update)
+    current_user = get_data_user(update)
     if current_user.in_game:
         return 1
     else:
