@@ -6,7 +6,7 @@ def char_default(update):
     current_user = db_sess.query(Character).filter(Character.user_id == update.effective_user.id).first()
     current_user.id = 0
     current_user.user_id = 0
-    current_user.name = ''
+    current_user.name = None
     current_user.room_id = 0
     current_user.hp = 0
     current_user.max_hp = 0

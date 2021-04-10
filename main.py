@@ -38,6 +38,8 @@ def start(update, context):
 
     return 1
 
+def check_move(update, context):
+    print(5)
 
 def help(update, context):
     current_user = get_data_user(update)
@@ -72,7 +74,8 @@ def main():
 
         states={
             1: [MessageHandler(filters=Filters.text, callback=register_char)],
-            2: [],
+            2: [CommandHandler('West', check_move),CommandHandler('North', check_move), CommandHandler('East', check_move)
+                ]
 
         },
         fallbacks=[],
