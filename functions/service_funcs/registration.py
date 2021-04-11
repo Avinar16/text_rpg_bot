@@ -2,8 +2,9 @@ from data.users import User
 from data.character import Character
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from data import db_session
-from library.User_Character import User_Interaction_with_Character
-from library.debug_func.char_defaut import char_default
+from functions.User_Character import User_Interaction_with_Character
+from functions.debug_func.char_defaut import char_default
+
 
 
 def register_user(update):
@@ -36,7 +37,12 @@ def register_char(update, context):
         db_sess.commit()
     reply_keyboard = [['/West', '/North', '/East']]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
-    update.message.reply_text(f'Поздравляем с созданием персонажа!), {user_info["first_name"]}!',
+    update.message.reply_text(f'Персонаж создан, его имя -  {update.message.text}',
                               reply_markup=markup)
     User_Interaction_with_Character(update, context)
-    #char_default(update)
+
+    # debug func/ delete char
+    char_default(update)
+
+    # EXIT state
+    return 3

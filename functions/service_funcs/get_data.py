@@ -10,8 +10,8 @@ def get_data_user(update, return_sess=False):
         return current_user, db_sess
     return current_user
 
+
 def get_data_character(update):
     db_sess = db_session.create_session()
     current_char = db_sess.query(Character).filter(Character.user_id == update.effective_user.id).first()
     return current_char
-
