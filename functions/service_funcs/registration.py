@@ -2,7 +2,7 @@ from data.users import User
 from data.items import Items
 from data.character import Character
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
-from data.items import Inventory
+from data.inventory import Inventory
 from data import db_session
 from functions.User_Character import User_Interaction_with_Character
 from functions.debug_func.char_defaut import char_default
@@ -36,7 +36,7 @@ def register_char(update, context):
             name=update.message.text)
         db_sess.add(user_character)
 
-        start_sword = db_sess.query(Items).filter(Items.id == 1)
+        start_sword = db_sess.query(Items).filter(Items.id == 1).first()
         add_sword = Inventory(is_equiped=True)
         add_sword.items = start_sword
         add_sword.character = user_character

@@ -5,3 +5,4 @@ from . import room_list
 from . import mobs
 from . import item_types
 from . import rooms
+from . import inventory

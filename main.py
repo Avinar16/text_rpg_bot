@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from telegram.ext import Updater, MessageHandler, Filters, ConversationHandler, CommandHandler
 from data import db_session
 from functions.global_funcs.standart_func import *
+from functions.global_funcs.ingame_func import *
 from functions.service_funcs.registration import register_char
 
 import os
@@ -41,6 +42,8 @@ def main():
 
     dp.add_handler(CommandHandler("record", record))
     dp.add_handler(CommandHandler("help", help))
+    dp.add_handler(CommandHandler("inventory", inventory))
+    dp.add_handler(CommandHandler("stats", print_stats))
     dp.add_handler(conv_handler)
 
     # Запускаем цикл приема и обработки сообщений.

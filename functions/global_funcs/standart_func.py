@@ -42,4 +42,4 @@ def help(update, context):
 /inventory - Открыть инвентарь
 /stats - Посмотреть характеристики персонажа"""
         )
-        user_default(update)
+        # user_default(update)
