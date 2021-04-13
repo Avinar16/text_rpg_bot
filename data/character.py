@@ -22,6 +22,4 @@ class Character(SqlAlchemyBase, SerializerMixin):
     level = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     exp = sqlalchemy.Column(sqlalchemy.Integer, default=0)
 
-    inventory = orm.relation("Items",
-                             secondary="inventory",
-                             backref="items")
+
