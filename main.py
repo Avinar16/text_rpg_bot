@@ -11,7 +11,7 @@ import os
 load_dotenv('.env')
 db_session.global_init("db/rpg.db")
 
-REGISTER, ENTER, EXIT = range(1, 4)
+REGISTER, ENTER, EXIT, INVENTORY = range(1, 5)
 
 
 def check_move(update, context):
@@ -31,10 +31,14 @@ def main():
         states={
             REGISTER: [MessageHandler(filters=Filters.text, callback=register_char)],
             ENTER: [CommandHandler('West', check_move), CommandHandler('North', check_move),
-                    CommandHandler('East', check_move)
-                    ],
+                    CommandHandler('East', check_move),
+                    CommandHandler("inventory", inventory),
+                    CommandHandler("stats", print_stats)],
             EXIT: [CommandHandler('West', check_move), CommandHandler('North', check_move),
-                   CommandHandler('East', check_move)]
+                   CommandHandler('East', check_move),
+                   CommandHandler("inventory", inventory),
+                   CommandHandler("stats", print_stats)],
+            INVENTORY: []
 
         },
         fallbacks=[],
@@ -42,8 +46,6 @@ def main():
 
     dp.add_handler(CommandHandler("record", record))
     dp.add_handler(CommandHandler("help", help))
-    dp.add_handler(CommandHandler("inventory", inventory))
-    dp.add_handler(CommandHandler("stats", print_stats))
     dp.add_handler(conv_handler)
 
     # Запускаем цикл приема и обработки сообщений.
