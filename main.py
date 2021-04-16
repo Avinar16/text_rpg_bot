@@ -1,7 +1,6 @@
 # Импортируем необходимые классы.
 from dotenv import load_dotenv
 from telegram.ext import Updater, MessageHandler, Filters, ConversationHandler, CommandHandler
-from data import db_session
 from functions.global_funcs.standart_func import *
 from functions.global_funcs.ingame_func import *
 from functions.service_funcs.registration import register_char
@@ -25,6 +24,7 @@ def main():
 
     # Получаем из него диспетчер сообщений.
     dp = updater.dispatcher
+    # Основной хендлер
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
 
@@ -32,14 +32,12 @@ def main():
             REGISTER: [MessageHandler(filters=Filters.text, callback=register_char)],
             ENTER: [CommandHandler('West', check_move), CommandHandler('North', check_move),
                     CommandHandler('East', check_move),
-                    CommandHandler("inventory", inventory),
                     CommandHandler("stats", print_stats)],
             EXIT: [CommandHandler('West', check_move), CommandHandler('North', check_move),
                    CommandHandler('East', check_move),
                    CommandHandler("inventory", inventory),
                    CommandHandler("stats", print_stats)],
-            INVENTORY: []
-
+            INVENTORY: [MessageHandler(filters=(Filters.text | Filters.command), callback=item_choose)]
         },
         fallbacks=[],
     )
@@ -49,7 +47,6 @@ def main():
     dp.add_handler(conv_handler)
 
     # Запускаем цикл приема и обработки сообщений.
-
     updater.start_polling()
 
     updater.idle()

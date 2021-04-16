@@ -9,9 +9,6 @@ from functions.debug_func.char_defaut import char_default
 
 
 def register_user(update):
-    reply_keyboard = [['/help', '/start', '/Record']]
-    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
-
     user_info = update.effective_user
     db_sess = db_session.create_session()
     if not db_sess.query(User).filter(User.tg_id == update.effective_user.id).first():
@@ -22,8 +19,7 @@ def register_user(update):
             in_game=False)
         db_sess.add(user)
         db_sess.commit()
-    update.message.reply_text(f'Добро пожаловать в EndlessDungeon, {user_info["first_name"]}!',
-                              reply_markup=markup)
+    update.message.reply_text(f'Добро пожаловать в EndlessDungeon, {user_info["first_name"]}!')
 
 
 def register_char(update, context):
@@ -42,7 +38,8 @@ def register_char(update, context):
         add_sword.character = user_character
         db_sess.add(add_sword)
         db_sess.commit()
-    reply_keyboard = [['/West', '/North', '/East']]
+    reply_keyboard = [['/West', '/North', '/East'],
+                      ['/help']]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
     update.message.reply_text(f'Персонаж создан, его имя -  {update.message.text}',
                               reply_markup=markup)
