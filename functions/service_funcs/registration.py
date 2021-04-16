@@ -31,7 +31,7 @@ def register_char(update, context):
     if not db_sess.query(Character).filter(Character.user_id == update.effective_user.id).first():
         user_character = Character(
             user_id=user_info.id,
-            room_id=0,
+            room_id=1,
             name=update.message.text)
         db_sess.add(user_character)
         db_sess.commit()
@@ -42,7 +42,7 @@ def register_char(update, context):
     User_Interaction_with_Character(update, context)
 
     # debug func/ delete char
-    char_default(update)
+    #char_default(update)
 
     # EXIT state
     return 3

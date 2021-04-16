@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from telegram.ext import Updater, MessageHandler, Filters, ConversationHandler, CommandHandler
 from data import db_session
 from functions.global_funcs.standart_func import *
+from functions.global_funcs.ingame_func import *
 from functions.service_funcs.registration import register_char
 
 import os
@@ -10,11 +11,7 @@ import os
 load_dotenv('.env')
 db_session.global_init("db/rpg.db")
 
-REGISTER, ENTER, EXIT = range(1, 4)
-
-
-def check_move(update, context):
-    pass
+REGISTER, ENTER, FIGHT, EXIT = range(1, 5)
 
 
 def main():
@@ -29,11 +26,12 @@ def main():
 
         states={
             REGISTER: [MessageHandler(filters=Filters.text, callback=register_char)],
-            ENTER: [CommandHandler('West', check_move), CommandHandler('North', check_move),
-                    CommandHandler('East', check_move)
+            ENTER: [CommandHandler('West', move_between_rooms), CommandHandler('North', move_between_rooms),
+                    CommandHandler('East', move_between_rooms)
                     ],
-            EXIT: [CommandHandler('West', check_move), CommandHandler('North', check_move),
-                   CommandHandler('East', check_move)]
+            FIGHT: [CommandHandler('Atack'), fight, CommandHandler('Block'), protection],
+            EXIT: [CommandHandler('West', move_between_rooms), CommandHandler('North', move_between_rooms),
+                   CommandHandler('East', move_between_rooms)]
 
         },
         fallbacks=[],
