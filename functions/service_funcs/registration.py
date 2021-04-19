@@ -46,5 +46,5 @@ def register_char(update, context):
                               reply_markup=markup)
     User_Interaction_with_Character(update, context)
     user_room = get_data_rooms(1)
-    update.message.reply_text(f' Вы находитесь в:{user_room.name, user_room.description}')
+    update.message.reply_text(f' Вы находитесь в: {user_room.name} \n{user_room.description}')
     return 3
