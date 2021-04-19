@@ -11,7 +11,7 @@ import os
 load_dotenv('.env')
 db_session.global_init("db/rpg.db")
 
-REGISTER, ENTER, FIGHT, EXIT = range(1, 5)
+REGISTER, ENTER, EXIT = range(1, 4)
 
 
 def main():
@@ -29,7 +29,7 @@ def main():
             ENTER: [CommandHandler('West', move_between_rooms), CommandHandler('North', move_between_rooms),
                     CommandHandler('East', move_between_rooms)
                     ],
-            FIGHT: [CommandHandler('Atack'), fight, CommandHandler('Block'), protection],
+            #FIGHT: [CommandHandler('Atack'), fight, CommandHandler('Block'), protection],
             EXIT: [CommandHandler('West', move_between_rooms), CommandHandler('North', move_between_rooms),
                    CommandHandler('East', move_between_rooms)]
 

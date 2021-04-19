@@ -1,4 +1,5 @@
 from data.users import User
+from functions.service_funcs.get_data import get_data_rooms
 from data.character import Character
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from data import db_session
@@ -42,7 +43,7 @@ def register_char(update, context):
     User_Interaction_with_Character(update, context)
 
     # debug func/ delete char
-    #char_default(update)
-
-    # EXIT state
+    # char_default(update)
+    user_room = get_data_rooms(1)
+    update.message.reply_text(f' Вы находитесь в:{user_room.name, user_room.description}')
     return 3

@@ -1,4 +1,5 @@
 from data import db_session
+from functions.service_funcs.get_data import get_data_rooms
 from functions.service_funcs.Updater_db_file import update_room
 from functions.service_funcs.get_data import get_data_character
 
@@ -14,6 +15,9 @@ def print_stats(update, context):
 def move_between_rooms(update, context):
     user = get_data_character(update)
     update_room(update, user.room_id, user.user_id)
+    user_room = get_data_rooms(user.room_id + 1)
+    update.message.reply_text(f'Вы пришли в:{user_room.name, user_room.description}')
+
 
 
 def fight(update, context):
