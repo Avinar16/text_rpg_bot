@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from telegram.ext import Updater, MessageHandler, Filters, ConversationHandler, CommandHandler
 from functions.global_funcs.standart_func import *
 from functions.global_funcs.ingame_func import *
+from functions.global_funcs.ingame_func import *
 from functions.global_funcs.inventory import *
 from functions.service_funcs.registration import register_char
 
@@ -12,10 +13,6 @@ load_dotenv('.env')
 db_session.global_init("db/rpg.db")
 
 REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
-
-
-def check_move(update, context):
-    pass
 
 
 def main():
@@ -34,11 +31,11 @@ def main():
             REGISTER: [MessageHandler(filters=Filters.text, callback=register_char)],
 
             # room states
-            ENTER: [CommandHandler('West', check_move), CommandHandler('North', check_move),
-                    CommandHandler('East', check_move),
+            ENTER: [CommandHandler('West', move_between_rooms), CommandHandler('North', move_between_rooms),
+                    CommandHandler('East', move_between_rooms),
                     CommandHandler("stats", print_stats)],
-            EXIT: [CommandHandler('West', check_move), CommandHandler('North', check_move),
-                   CommandHandler('East', check_move),
+            EXIT: [CommandHandler('West', move_between_rooms), CommandHandler('North', move_between_rooms),
+                   CommandHandler('East', move_between_rooms),
                    CommandHandler("inventory", inventory),
                    CommandHandler("stats", print_stats)],
             # Inventory states

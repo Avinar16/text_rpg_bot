@@ -1,6 +1,7 @@
 from data.users import User
 from data.items import Items
 from data.keyboards import exit_room_keyboard
+from functions.service_funcs.get_data import get_data_rooms
 from data.character import Character
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from data.inventory import Inventory
@@ -29,7 +30,7 @@ def register_char(update, context):
     if not db_sess.query(Character).filter(Character.user_id == update.effective_user.id).first():
         user_character = Character(
             user_id=user_info.id,
-            room_id=0,
+            room_id=1,
             name=update.message.text)
         db_sess.add(user_character)
 
@@ -44,7 +45,6 @@ def register_char(update, context):
     update.message.reply_text(f'Персонаж создан, его имя -  {update.message.text}',
                               reply_markup=markup)
     User_Interaction_with_Character(update, context)
-    # debug func/ delete char
-    # char_default(update)
-    # EXIT state
+    user_room = get_data_rooms(1)
+    update.message.reply_text(f' Вы находитесь в:{user_room.name, user_room.description}')
     return 3

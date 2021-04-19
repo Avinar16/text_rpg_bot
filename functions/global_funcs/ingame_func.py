@@ -10,6 +10,9 @@ from data.users import User
 
 # Стейты из ConversationHandler файла main
 REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
+from functions.service_funcs.get_data import get_data_rooms
+from functions.service_funcs.Updater_db_file import update_room
+from functions.service_funcs.get_data import get_data_character
 
 
 def inventory(update, context):
@@ -64,3 +67,19 @@ def end_game(update, context):
     db_sess.commit()
     update.message.reply_text('Игра завершена. Начать новую игру - /start')
     return ConversationHandler.END
+
+
+def move_between_rooms(update, context):
+    user = get_data_character(update)
+    update_room(update, user.room_id, user.user_id)
+    user_room = get_data_rooms(user.room_id)
+    update.message.reply_text(f'Вы пришли в:{user_room.name, user_room.description}')
+
+
+
+def fight(update, context):
+    pass
+
+
+def protection(update, context):
+    pass
