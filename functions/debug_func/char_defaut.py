@@ -11,4 +11,3 @@ def char_default(update):
     for item in inventory:
         db_sess.delete(item)
     db_sess.commit()
-    print(f'User {update.effective_user.id} char deleted')

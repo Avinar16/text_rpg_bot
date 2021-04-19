@@ -6,7 +6,7 @@ from .ingame_func import inventory
 from .item_interactions import *
 from functions.service_funcs.inv_back import inv_back
 
-REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION = range(1, 6)
+REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
 
 
 # ////////////////////////////////

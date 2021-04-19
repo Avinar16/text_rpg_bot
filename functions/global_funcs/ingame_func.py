@@ -3,9 +3,13 @@ from functions.service_funcs.get_data import get_data_character
 from telegram import ReplyKeyboardMarkup
 from data.inventory import Inventory
 from data.items import Items
+from telegram.ext import ConversationHandler
+from functions.debug_func.char_defaut import char_default
+from data.keyboards import inv_keyboard
+from data.users import User
 
 # Стейты из ConversationHandler файла main
-REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION = range(1, 6)
+REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
 
 
 def inventory(update, context):
@@ -33,7 +37,7 @@ def inventory(update, context):
         result_dict[count] = [item, inv_obj]
     # Запись словаря в глобальную user_data и вывод клавиатуры
     context.user_data['inventory'] = result_dict
-    reply_keyboard = [['/back']]
+    reply_keyboard = inv_keyboard
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
     # Вывод всех предметов из инвентаря
     update.message.reply_text(result, reply_markup=markup)
@@ -44,7 +48,19 @@ def print_stats(update, context):
     # Вывод статов(потом их будет больше)
     current_char = get_data_character(update)
     update.message.reply_text(f'''
-    HP - {current_char.hp}
+Персонаж {current_char.name}
+HP - {current_char.hp}
 Maximum hp - {current_char.max_hp}
 Level - {current_char.level}
 Exp - {current_char.exp}''', )
+
+
+# Прерывание игры
+def end_game(update, context):
+    db_sess = db_session.create_session()
+    char_default(update)
+    user = db_sess.query(User).filter(User.tg_id == update.effective_user.id).first()
+    user.in_game = False
+    db_sess.commit()
+    update.message.reply_text('Игра завершена. Начать новую игру - /start')
+    return ConversationHandler.END

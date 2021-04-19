@@ -11,7 +11,7 @@ import os
 load_dotenv('.env')
 db_session.global_init("db/rpg.db")
 
-REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION = range(1, 6)
+REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
 
 
 def check_move(update, context):
@@ -43,9 +43,10 @@ def main():
                    CommandHandler("stats", print_stats)],
             # Inventory states
             INVENTORY: [MessageHandler(filters=(Filters.text | Filters.command), callback=item_choose)],
-            ITEM_INTERACTION: [MessageHandler(filters=(Filters.text | Filters.command), callback=item_interaction)]
+            ITEM_INTERACTION: [MessageHandler(filters=(Filters.text | Filters.command), callback=item_interaction)],
         },
-        fallbacks=[],
+        fallbacks=[CommandHandler('end_game', callback=end_game)],
+        # allow_reentry=True
     )
 
     dp.add_handler(CommandHandler("record", record))

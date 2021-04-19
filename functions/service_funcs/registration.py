@@ -1,5 +1,6 @@
 from data.users import User
 from data.items import Items
+from data.keyboards import exit_room_keyboard
 from data.character import Character
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from data.inventory import Inventory
@@ -38,8 +39,7 @@ def register_char(update, context):
         add_sword.character = user_character
         db_sess.add(add_sword)
         db_sess.commit()
-    reply_keyboard = [['/West', '/North', '/East'],
-                      ['/help']]
+    reply_keyboard = exit_room_keyboard
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
     update.message.reply_text(f'Персонаж создан, его имя -  {update.message.text}',
                               reply_markup=markup)

@@ -2,7 +2,7 @@ from functions.service_funcs.registration import register_user
 from functions.service_funcs.get_data import get_data_user
 from functions.debug_func.user_default import user_default
 
-REGISTER, ENTER, EXIT = range(1, 4)
+REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
 
 
 def start(update, context):
@@ -31,14 +31,14 @@ def help(update, context):
     current_user = get_data_user(update)
     if not current_user.in_game:
         update.message.reply_text(
-            """
-            /record - Показать рекорд
-            """
+            """/start - начать игру
+/record - Показать рекорд"""
         )
     else:
         update.message.reply_text(
             """/record - Показать рекорд
 /inventory - Открыть инвентарь
-/stats - Посмотреть характеристики персонажа"""
+/stats - Посмотреть характеристики персонажа
+/ end_game - Завершить игру"""
         )
         # user_default(update)
