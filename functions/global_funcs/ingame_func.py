@@ -1,10 +1,8 @@
 from data import db_session
-from functions.service_funcs.get_data import get_data_user, get_data_character
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
-from telegram.ext import Updater, MessageHandler, Filters, ConversationHandler, CommandHandler
+from functions.service_funcs.get_data import get_data_character
+from telegram import ReplyKeyboardMarkup
 from data.inventory import Inventory
 from data.items import Items
-from data.item_types import Item_types
 
 # Стейты из ConversationHandler файла main
 REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION = range(1, 6)
@@ -29,7 +27,7 @@ def inventory(update, context):
         if inv_obj.is_equiped:
             result += f'{count} - {item.name}, Надето \n'
         else:
-            result += f'{count} - {item.name}'
+            result += f'{count} - {item.name} \n'
 
         # Словарь предметов и объекты инвентаря.
         result_dict[count] = [item, inv_obj]

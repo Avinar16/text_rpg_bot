@@ -33,7 +33,7 @@ def main():
             # start state
             REGISTER: [MessageHandler(filters=Filters.text, callback=register_char)],
 
-            # room state
+            # room states
             ENTER: [CommandHandler('West', check_move), CommandHandler('North', check_move),
                     CommandHandler('East', check_move),
                     CommandHandler("stats", print_stats)],

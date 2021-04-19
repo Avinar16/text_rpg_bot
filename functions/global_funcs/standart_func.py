@@ -16,7 +16,6 @@ def start(update, context):
 
     # user_default(update)
     update.message.reply_text("""Как назвать вашего персонажа?""")
-    update.message.reply_text(f'user {user.tg_id} in game={user.in_game}')
 
     # Регистрация персонажа
     return REGISTER

@@ -4,9 +4,14 @@ from data.inventory import Inventory
 from data.item_types import Item_types
 from .ingame_func import inventory
 from .item_interactions import *
+from functions.service_funcs.inv_back import inv_back
 
 REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION = range(1, 6)
 
+
+# ////////////////////////////////
+# нужно добавить учет характеристик
+# ////////////////////////////////
 
 def item_choose(update, context):
     count = update.message.text
@@ -53,27 +58,16 @@ def item_interaction(update, context):
     item, inv_obj = context.user_data['current_item']
 
     if text == '/back':
-        return inv_back(update, context, INVENTORY)
+        pass
     # Выкинуть предмет
     elif text == '/drop':
         drop(item.id)
         update.message.reply_text('Предмет волшебным образом растворился у вас в руках')
         # Вернуться в инвентарь
-        return inv_back(update, context, INVENTORY)
     elif item.item_type_id == 1 or item.item_type_id == 2:
         if text == '/equip':
-            # ///////////////
-            equip(inv_obj)
-
-
-def inv_back(update, context, state):
-    # Возвращение к инвентарю( к выводу списка )
-    if state == INVENTORY:
-        return inventory(update, context)
-    # Возвращение к комнате
-    elif state == EXIT:
-        reply_keyboard = [['/West', '/North', '/East'],
-                          ['/help']]
-        markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
-        update.message.reply_text('Возвращаемся  к комнате', reply_markup=markup)
-        return state
+            equip(update, context, item, inv_obj)
+    elif item.item_type_id == 3:
+        if text == '/use':
+            use(update, context, item, inv_obj)
+    return inv_back(update, context, INVENTORY)
