@@ -7,7 +7,7 @@ from functions.debug_func.char_defaut import char_default
 from data.keyboards import inv_keyboard
 from data.users import User
 from functions.service_funcs.get_data import get_data_rooms
-from functions.service_funcs.Updater_db_file import update_room
+from functions.service_funcs.Updater_db_file import create_room
 from functions.service_funcs.get_data import get_data_character
 
 # Стейты из ConversationHandler файла main
@@ -69,10 +69,7 @@ def end_game(update, context):
 
 
 def move_between_rooms(update, context):
-    char, db_sess = get_data_character(update, return_sess=True)
-    print(char)
-    update_room(update)
-    db_sess.commit()
+    room = create_room(update, context)
     update.message.reply_text(f'Вы пришли в {room.name} \n{room.description}')
 
 
