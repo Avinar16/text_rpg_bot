@@ -61,7 +61,7 @@ def item_interaction(update, context):
         pass
     # Выкинуть предмет
     elif text == '/drop':
-        drop(item.id)
+        drop(update, context, item, inv_obj)
         update.message.reply_text('Предмет волшебным образом растворился у вас в руках')
         # Вернуться в инвентарь
     elif item.item_type_id == 1 or item.item_type_id == 2:

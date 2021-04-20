@@ -31,7 +31,13 @@ def register_char(update, context):
         user_character = Character(
             user_id=user_info.id,
             room_id=1,
-            name=update.message.text)
+            name=update.message.text,
+            hp=5,
+            max_hp=5,
+            level=1,
+            exp=0,
+            armor=1,
+            attack=3)
         db_sess.add(user_character)
 
         start_sword = db_sess.query(Items).filter(Items.id == 1).first()

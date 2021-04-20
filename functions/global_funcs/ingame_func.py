@@ -1,5 +1,4 @@
 from data import db_session
-from functions.service_funcs.get_data import get_data_character
 from telegram import ReplyKeyboardMarkup
 from data.inventory import Inventory
 from data.items import Items
@@ -7,12 +6,12 @@ from telegram.ext import ConversationHandler
 from functions.debug_func.char_defaut import char_default
 from data.keyboards import inv_keyboard
 from data.users import User
-
-# Стейты из ConversationHandler файла main
-REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
 from functions.service_funcs.get_data import get_data_rooms
 from functions.service_funcs.Updater_db_file import update_room
 from functions.service_funcs.get_data import get_data_character
+
+# Стейты из ConversationHandler файла main
+REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
 
 
 def inventory(update, context):
@@ -48,13 +47,13 @@ def inventory(update, context):
 
 
 def print_stats(update, context):
-    # Вывод статов(потом их будет больше)
+    # Вывод статов
     current_char = get_data_character(update)
     update.message.reply_text(f'''
-Персонаж {current_char.name}
-HP - {current_char.hp}
-Maximum hp - {current_char.max_hp}
-Level - {current_char.level}
+Персонаж {current_char.name}, {current_char.level}lvl
+HP - {current_char.hp} / {current_char.max_hp}
+Attack - {current_char.attack}
+Armor - {current_char.armor}
 Exp - {current_char.exp}''', )
 
 
@@ -70,11 +69,11 @@ def end_game(update, context):
 
 
 def move_between_rooms(update, context):
-    user = get_data_character(update)
-    update_room(update, user.room_id, user.user_id)
-    user_room = get_data_rooms(user.room_id)
-    update.message.reply_text(f'Вы пришли в {user_room.name} \n{user_room.description}')
-
+    char, db_sess = get_data_character(update, return_sess=True)
+    print(char)
+    update_room(update)
+    db_sess.commit()
+    update.message.reply_text(f'Вы пришли в {room.name} \n{room.description}')
 
 
 def fight(update, context):

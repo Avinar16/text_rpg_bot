@@ -6,9 +6,17 @@ from functions.service_funcs.get_data import get_data_character
 REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
 
 
-def drop(id):
+def drop(update, context, items, inv_obj):
     db_sess = db_session.create_session()
-    inventory_item = db_sess.query(Inventory).filter(Inventory.item_id == id).first()
+
+    inventory_item = db_sess.query(Inventory).filter(Inventory.item_id == items.id).first()
+    fr_inv_obj = db_sess.query(Inventory).filter(Inventory.char_id == inv_obj.char_id,
+                                                 Inventory.item_id == inv_obj.item_id).first()
+    fr_inv_obj.is_equiped = False
+    db_sess.commit()
+
+    equip(update, items, inv_obj)
+
     db_sess.delete(inventory_item)
     db_sess.commit()
 
@@ -18,9 +26,8 @@ def drop(id):
 # ////////////////////////////////
 
 def equip(update, context, items, inv_obj):
-    db_sess = db_session.create_session()
+    current_char, db_sess = get_data_character(update, return_sess=True)
     # Определение сколько предметов надето
-    current_char = get_data_character(update)
     equiped_armor = 0
     equiped_weapon = 0
     for item in current_char.inventory:
@@ -37,19 +44,39 @@ def equip(update, context, items, inv_obj):
     # и не подходит для изменения базы, fr_inv_obj = inv_obj, но текущей сессии
     fr_inv_obj = db_sess.query(Inventory).filter(Inventory.char_id == inv_obj.char_id,
                                                  Inventory.item_id == inv_obj.item_id).first()
+    print(current_char.attack)
+    print('standart')
     # unequip
     if fr_inv_obj.is_equiped:
         fr_inv_obj.is_equiped = False
         update.message.reply_text(f'Вы сняли {items.name}')
+
+        if fr_inv_obj.items.item_type_id == 1:
+            current_char.attack -= fr_inv_obj.items.attack_armor
+
+            print(current_char.attack)
+            print('minus')
+
+        elif fr_inv_obj.items.item_type_id == 2:
+            current_char.armor -= fr_inv_obj.items.attack_armor
+
     # equip
     else:
         # Если оружие
         if fr_inv_obj.items.item_type_id == 1 and equiped_weapon < MAX_EQUIPED_WEAPON:
             fr_inv_obj.is_equiped = True
+
+            current_char.attack += fr_inv_obj.items.attack_armor
+            print(current_char.attack)
+            print('plus')
+
             update.message.reply_text(f'Оружие "{fr_inv_obj.items.name}" надето')
         # Если броня
         elif fr_inv_obj.items.item_type_id == 2 and equiped_armor < MAX_EQUIPED_ARMOR:
             fr_inv_obj.is_equiped = True
+
+            current_char.armor += fr_inv_obj.items.attack_armor
+
             update.message.reply_text(f'Броня "{fr_inv_obj.items.name}" надета')
         # Если превышен лимит
         elif equiped_weapon >= MAX_EQUIPED_WEAPON or equiped_armor >= MAX_EQUIPED_ARMOR:
@@ -57,6 +84,7 @@ def equip(update, context, items, inv_obj):
 Максимум брони - {MAX_EQUIPED_ARMOR}
 Максимум оружия - {MAX_EQUIPED_WEAPON}""")
     db_sess.commit()
+    print('commit')
 
 
 # in dev

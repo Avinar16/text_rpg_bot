@@ -21,4 +21,11 @@ class Mobs(SqlAlchemyBase, SerializerMixin):
                            primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    stats = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+
+    hp = sqlalchemy.Column(sqlalchemy.Integer, default=1)
+    max_hp = sqlalchemy.Column(sqlalchemy.Integer, default=1)
+
+    exp_drop = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+
+    armor = sqlalchemy.Column(sqlalchemy.Integer, default=1)
+    attack = sqlalchemy.Column(sqlalchemy.Integer, default=1)

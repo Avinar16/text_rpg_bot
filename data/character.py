@@ -22,4 +22,8 @@ class Character(SqlAlchemyBase, SerializerMixin):
     level = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     exp = sqlalchemy.Column(sqlalchemy.Integer, default=0)
 
+    armor = sqlalchemy.Column(sqlalchemy.Integer, default=1)
+    attack = sqlalchemy.Column(sqlalchemy.Integer, default=1)
+
+
 
