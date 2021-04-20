@@ -9,6 +9,9 @@ class Rooms(SqlAlchemyBase, SerializerMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
+
+    base_id = sqlalchemy.Column(sqlalchemy.Integer,
+                                sqlalchemy.ForeignKey("room_list.id"))
     name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     description = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     # тут можно добавить backref, если мы хотим знать, в каких комнатах находится конкретный моб в модели мобов,
