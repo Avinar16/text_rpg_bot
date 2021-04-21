@@ -31,9 +31,7 @@ def main():
             REGISTER: [MessageHandler(filters=Filters.text, callback=register_char)],
 
             # room states
-            ENTER: [CommandHandler('West', move_between_rooms), CommandHandler('North', move_between_rooms),
-                    CommandHandler('East', move_between_rooms),
-                    CommandHandler("stats", print_stats)],
+            ENTER: [CommandHandler("stats", print_stats)],
             EXIT: [CommandHandler('West', move_between_rooms), CommandHandler('North', move_between_rooms),
                    CommandHandler('East', move_between_rooms),
                    CommandHandler("inventory", inventory),
@@ -43,7 +41,6 @@ def main():
             ITEM_INTERACTION: [MessageHandler(filters=(Filters.text | Filters.command), callback=item_interaction)],
         },
         fallbacks=[CommandHandler('end_game', callback=end_game)],
-        # allow_reentry=True
     )
 
     dp.add_handler(CommandHandler("record", record))

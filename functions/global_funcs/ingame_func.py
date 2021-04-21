@@ -71,11 +71,8 @@ def end_game(update, context):
 def move_between_rooms(update, context):
     room = create_room(update, context)
     update.message.reply_text(f'Вы пришли в {room.name} \n{room.description}')
+    return ENTER
 
 
-def fight(update, context):
-    pass
-
-
-def protection(update, context):
+def enter_room(update, context):
     pass
