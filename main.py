@@ -31,8 +31,8 @@ def main():
             REGISTER: [MessageHandler(filters=Filters.text, callback=register_char)],
 
             # room states
-            ENTER: [CommandHandler('West', move_between_rooms), CommandHandler('North', move_between_rooms),
-                    CommandHandler('East', move_between_rooms),
+            ENTER: [CommandHandler('West', fight), CommandHandler('North', fight),
+                    CommandHandler('East', fight),
                     CommandHandler("stats", print_stats)],
             EXIT: [CommandHandler('West', move_between_rooms), CommandHandler('North', move_between_rooms),
                    CommandHandler('East', move_between_rooms),

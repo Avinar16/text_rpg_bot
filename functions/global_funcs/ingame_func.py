@@ -74,7 +74,9 @@ def move_between_rooms(update, context):
 
 
 def fight(update, context):
-    pass
+    current_char = get_data_character(update)
+    mob = current_char.room.mob
+    print(mob)
 
 
 def protection(update, context):

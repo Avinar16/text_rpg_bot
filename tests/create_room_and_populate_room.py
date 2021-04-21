@@ -2,7 +2,7 @@ from data import db_session
 from data.character import Character
 from data.items import Items
 from data.rooms import Rooms
-from data.mobs import Mobs
+from data.mobs_list import Mobs
 
 """
 Создадим монстров, комнату, наполним ее, привяжем к ней персонажа
