@@ -1,4 +1,5 @@
 from data.users import User
+from data.mobs import Mobs
 from data.character import Character
 from data.room_list import Room_list
 from data import db_session
@@ -24,3 +25,12 @@ def get_data_rooms(id):
     db_sess = db_session.create_session()
     current_room = db_sess.query(Room_list).filter(Room_list.id == id).first()
     return current_room
+
+def get_mobs_in_room(id, return_sess=False):
+    db_sess = db_session.create_session()
+    current_mobs = db_sess.query(Mobs).filter(Mobs.room_id == id).all()
+    if return_sess:
+        return current_mobs, db_sess
+    return current_mobs
+
+

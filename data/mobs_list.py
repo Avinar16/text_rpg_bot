@@ -20,3 +20,4 @@ class Mobs_list(SqlAlchemyBase, SerializerMixin):
 
     armor = sqlalchemy.Column(sqlalchemy.Integer, default=1)
     attack = sqlalchemy.Column(sqlalchemy.Integer, default=1)
+    level = sqlalchemy.Column(sqlalchemy.Integer, default=1)

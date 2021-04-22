@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from telegram.ext import Updater, MessageHandler, Filters, ConversationHandler, CommandHandler
 from functions.global_funcs.standart_func import *
 from functions.global_funcs.ingame_func import *
-from functions.global_funcs.ingame_func import *
 from functions.global_funcs.inventory import *
 from functions.service_funcs.registration import register_char
 
@@ -31,7 +30,7 @@ def main():
             REGISTER: [MessageHandler(filters=Filters.text, callback=register_char)],
 
             # room states
-            ENTER: [CommandHandler("stats", print_stats)],
+            ENTER: [MessageHandler(filters=(Filters.text | Filters.command), callback=enter_room)],
             EXIT: [CommandHandler('West', move_between_rooms), CommandHandler('North', move_between_rooms),
                    CommandHandler('East', move_between_rooms),
                    CommandHandler("inventory", inventory),
