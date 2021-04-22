@@ -3,7 +3,8 @@ def set_timer(update, context):
     chat_id = update.message.chat_id
     # Добавляем задачу в очередь
     # и останавливаем предыдущую (если она была)
-    task, duration = context.user_data['task']
+    task = context.user_data['task_info']['task']
+    duration = context.user_data['task_info']['duration']
     job_removed = remove_job_if_exists(
         str(chat_id),
         context
@@ -11,7 +12,7 @@ def set_timer(update, context):
     context.job_queue.run_once(
         task,
         duration,
-        context=chat_id,
+        context=context,
         name=str(chat_id)
     )
     text = f'Эффект будет действовать {duration} секунд.'
