@@ -22,9 +22,6 @@ def create_room(update, context):
         description=base.description
     )
 
-    id = random.randrange(1, 10)
-    Mob = db_sess.query(Mobs).filter(Mobs.id == 1).first()
-    new_room.mobs.append(Mob)
     # /////////////////////
     # add_items
     # //////////////////
@@ -35,6 +32,7 @@ def create_room(update, context):
     db_sess.commit()
 
     return new_room
+
 
 def create_items_in_room():
     pass

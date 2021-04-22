@@ -7,8 +7,10 @@ from functions.debug_func.char_defaut import char_default
 from data.keyboards import inv_keyboard
 from data.users import User
 from functions.service_funcs.get_data import get_data_rooms
+from functions.global_funcs.room_funcs import *
 from functions.service_funcs.Updater_db_file import create_room
 from functions.service_funcs.get_data import get_data_character
+import random
 
 # Стейты из ConversationHandler файла main
 REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
@@ -73,10 +75,15 @@ def move_between_rooms(update, context):
     update.message.reply_text(f'Вы пришли в {room.name} \n{room.description}')
     return ENTER
 
+
 def fight(update, context):
     current_char = get_data_character(update)
     mob = current_char.room.mob
     print(mob)
 
+
 def enter_room(update, context):
-    pass
+    add_items(update, context)
+    add_mobs(update, context)
+
+
