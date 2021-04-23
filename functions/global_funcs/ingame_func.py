@@ -8,7 +8,7 @@ from data.keyboards import inv_keyboard
 from data.users import User
 from functions.service_funcs.get_data import get_data_rooms
 from functions.global_funcs.room_funcs import *
-from functions.service_funcs.Updater_db_file import create_room
+from functions.service_funcs.Updater_db_file import *
 from functions.service_funcs.get_data import *
 import random
 
@@ -91,24 +91,22 @@ def fight(update, context):
         update.message.reply_text(f'{Mob_model.name} повержен!')
         db_sess.commit()
         return EXIT
-    get_hurt(update, context)
+    get_hurt(update, context, mob)
     return ENTER
 
 
 
-def get_hurt(update, context):
+def get_hurt(update, context, mob):
     cur_char, db_sess = get_data_character(update, return_sess=True)
-    mobs = get_mobs_in_room(cur_char.room_id)
-    mob = mobs[0]
     damage = mob.attack
     new_char_hp = int(cur_char.hp) - int(damage)
     setattr(cur_char, 'hp', str(new_char_hp))
-    db_sess.commit()
     Mob_model = db_sess.query(Mobs_list).filter(Mobs_list.id == mob.mob_id).first()
     update.message.reply_text(f'{Mob_model.name} нанёс вам {damage} урона')
     if int(cur_char.hp) == 0 or int(cur_char.hp) < 0:
-        update.message.reply_text(f'{cur_char.name} погиб!')
+        death_char_delete_room(update, context, mob)
         end_game(update, context)
+    db_sess.commit()
 
 
 
@@ -123,11 +121,10 @@ def enter_room(update, context):
         pass
     else:
         if len(get_mobs_in_room(cur_char.room_id)):
+            update.message.reply_text(f'Вы пришли в {cur_char.room.name} \n{cur_char.room.description}')
             update.message.reply_text(f'В комнате враги!')
             return ENTER
     if use_attack == '/attack' and len(get_mobs_in_room(cur_char.room_id)):
-        mobs_in_room = get_mobs_in_room(cur_char.room_id)
-        mob = mobs_in_room[0]
-        while mob.hp != 0 or mob.hp > 0:
-            fight(update, context)
+        fight(update, context)
+        return ENTER
     return EXIT

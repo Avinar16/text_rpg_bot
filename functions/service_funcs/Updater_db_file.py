@@ -2,7 +2,8 @@ from data import db_session
 import random
 from data.rooms import Rooms
 from data.room_list import Room_list
-from functions.service_funcs.get_data import get_data_character
+from data.mobs import Mobs
+from functions.service_funcs.get_data import *
 
 
 def create_room(update, context):
@@ -34,3 +35,12 @@ def create_room(update, context):
 
 def create_items_in_room():
     pass
+
+def death_char_delete_room(update, context, mob):
+    char, db_sess = get_data_character(update, return_sess=True)
+    db_sess.delete(char.room)
+    mob_murder = db_sess.query(Mobs).filter(Mobs.mob_id == mob.mob_id).first()
+    db_sess.delete(mob_murder)
+    update.message.reply_text(f'{char.name} погиб!')
+    db_sess.commit()
+
