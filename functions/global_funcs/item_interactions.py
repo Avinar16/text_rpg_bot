@@ -84,11 +84,6 @@ def equip(update, context, items, inv_obj):
     print('commit')
 
 
-# in dev
-# ////////////////////////////////
-# нужно добавить учет эффектов
-# ////////////////////////////////
-
 def use(update, context, item, inv_obj):
     update.message.reply_text(f'Предмет {item.name} использован')
     item_usages(update, context, item)

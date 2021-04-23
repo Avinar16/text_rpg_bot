@@ -9,10 +9,6 @@ from functions.service_funcs.inv_back import inv_back
 REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
 
 
-# ////////////////////////////////
-# нужно добавить учет характеристик
-# ////////////////////////////////
-
 def item_choose(update, context):
     count = update.message.text
     # команда возврата

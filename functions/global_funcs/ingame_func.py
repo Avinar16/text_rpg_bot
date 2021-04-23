@@ -62,7 +62,9 @@ Exp - {current_char.exp}''', )
 # Прерывание игры
 def end_game(update, context):
     db_sess = db_session.create_session()
+    # убираем персонажа
     char_default(update)
+    # убираем in_game юзера
     user = db_sess.query(User).filter(User.tg_id == update.effective_user.id).first()
     user.in_game = False
     db_sess.commit()
@@ -70,10 +72,9 @@ def end_game(update, context):
     return ConversationHandler.END
 
 
-def move_between_rooms(update, context):
+def enter_room(update, context):
     room = create_room(update, context)
     update.message.reply_text(f'Вы пришли в {room.name} \n{room.description}')
-    return ENTER
 
 
 def fight(update, context):
@@ -95,7 +96,6 @@ def fight(update, context):
     return ENTER
 
 
-
 def get_hurt(update, context, mob):
     cur_char, db_sess = get_data_character(update, return_sess=True)
     damage = mob.attack
@@ -109,22 +109,25 @@ def get_hurt(update, context, mob):
     db_sess.commit()
 
 
-
-def enter_room(update, context):
+def enter_room1(update, context):
     cur_char = get_data_character(update)
-    use_attack = update.message.text
-    print(use_attack)
+    text = update.message.text
+    print(text)
     add_items(update, context)
     if not len(get_mobs_in_room(cur_char.room_id)):
         add_mobs(update, context, cur_char.room_id)
-    if use_attack == '/attack':
+    if text == '/attack':
         pass
     else:
         if len(get_mobs_in_room(cur_char.room_id)):
             update.message.reply_text(f'Вы пришли в {cur_char.room.name} \n{cur_char.room.description}')
             update.message.reply_text(f'В комнате враги!')
             return ENTER
-    if use_attack == '/attack' and len(get_mobs_in_room(cur_char.room_id)):
+    if text == '/attack' and len(get_mobs_in_room(cur_char.room_id)):
         fight(update, context)
         return ENTER
     return EXIT
+
+
+def mob_choose(update, context):
+    pass

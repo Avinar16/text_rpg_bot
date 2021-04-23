@@ -4,7 +4,6 @@ from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy import orm
 
 
-
 class Mobs_list(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'mobs_list'
 

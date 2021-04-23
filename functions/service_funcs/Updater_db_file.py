@@ -4,11 +4,12 @@ from data.rooms import Rooms
 from data.room_list import Room_list
 from data.mobs import Mobs
 from functions.service_funcs.get_data import *
+from functions.global_funcs.room_funcs import *
 
 
 def create_room(update, context):
     char, db_sess = get_data_character(update, return_sess=True)
-
+    # удаляем старую
     db_sess.delete(char.room)
 
     # Создаем новую комнату, записываем ее в базу
@@ -20,14 +21,9 @@ def create_room(update, context):
         name=base.name,
         description=base.description
     )
-
-    # /////////////////////
-    # add_items
-    # //////////////////
-
-    db_sess.add(new_room)
     char.room = new_room
-
+    add_mobs(update, context, new_room)
+    db_sess.add(new_room)
     db_sess.commit()
 
     return new_room
@@ -36,6 +32,7 @@ def create_room(update, context):
 def create_items_in_room():
     pass
 
+
 def death_char_delete_room(update, context, mob):
     char, db_sess = get_data_character(update, return_sess=True)
     db_sess.delete(char.room)
@@ -43,4 +40,3 @@ def death_char_delete_room(update, context, mob):
     db_sess.delete(mob_murder)
     update.message.reply_text(f'{char.name} погиб!')
     db_sess.commit()
-

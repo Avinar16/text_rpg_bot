@@ -27,3 +27,5 @@ class Items(SqlAlchemyBase, SerializerMixin):
     item_type_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('item_types.id'))
 
     attack_armor = sqlalchemy.Column(sqlalchemy.Integer, default=1)
+
+    level = sqlalchemy.Column(sqlalchemy.Integer, default=1)

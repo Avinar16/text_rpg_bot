@@ -31,8 +31,8 @@ def main():
 
             # room states
             ENTER: [MessageHandler(filters=(Filters.text | Filters.command), callback=enter_room)],
-            EXIT: [CommandHandler('West', move_between_rooms), CommandHandler('North', move_between_rooms),
-                   CommandHandler('East', move_between_rooms),
+            EXIT: [CommandHandler('West', enter_room), CommandHandler('North', enter_room),
+                   CommandHandler('East', enter_room),
                    CommandHandler("inventory", inventory),
                    CommandHandler("stats", print_stats)],
             # Inventory states
