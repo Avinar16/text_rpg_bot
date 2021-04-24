@@ -22,15 +22,13 @@ def create_room(update, context):
         description=base.description
     )
     char.room = new_room
-    add_mobs(update, context, new_room)
     db_sess.add(new_room)
     db_sess.commit()
 
+    add_mobs(update, context, new_room)
+    add_items(update, context)
+
     return new_room
-
-
-def create_items_in_room():
-    pass
 
 
 def death_char_delete_room(update, context, mob):

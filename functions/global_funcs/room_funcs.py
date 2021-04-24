@@ -1,5 +1,6 @@
 import random
 from data.mobs import Mobs
+from data.items import Items
 from data.mobs_list import Mobs_list
 from data.rooms import Rooms
 from functions.service_funcs.get_data import *
@@ -7,26 +8,38 @@ from data import db_session
 
 
 def add_items(update, context):
+    char, db_sess = get_data_character(update, return_sess=True)
     # События
     item_encounter = random.randrange(1, 22)
     item_count = random.randrange(1, 4)
 
+    items_level = [0] * item_count
+
     # худший исход
     if item_encounter <= 6:
         # no items
-        pass
+        return
     # Самый положительный исход
     elif item_encounter == 21:
         # add 1 item +2 level and other +0 level
-        pass
+        items_level[0] = 2
     # положительный исход
     elif item_encounter >= 17:
         # add 1 item +1 and other +0 level
-        pass
+        items_level[0] = 1
     # отрицательный исход
     else:
         # add 1 item +0 and other -1 level
-        pass
+        if char.level != 1:
+            items_level = [-1] * item_count
+            items_level[0] = 0
+    print(item_encounter)
+    for level in items_level:
+        suitable_items = db_sess.query(Items).filter(Items.level == char.level + level).all()
+        item = random.choice(suitable_items)
+        print(item.name)
+        char.room.items.append(item)
+        db_sess.commit()
 
 
 def add_mobs(update, context, room):
@@ -37,7 +50,7 @@ def add_mobs(update, context, room):
     mob_count = random.randrange(1, 4)
 
     # левелы мобов
-    mobs_level = [1] * mob_count
+    mobs_level = [0] * mob_count
 
     # Самый положительный исход
     if mobs_encounter >= 18:
@@ -47,24 +60,20 @@ def add_mobs(update, context, room):
     # Положительный исход
     elif mobs_encounter >= 13:
         # add mobs -1 level
-        for level in mobs_level:
-            if level != 0:
-                level -= 1
+        if char.level != 1:
+            mobs_level = [-1] * mob_count
     # Отрицательный исход
     elif mobs_encounter <= 6:
-        first = True
-        # add 1 mob +2 level other +1
-        for level in mobs_level:
-            if first:
-                level += 2
-                first = False
+        for count in range(len(mobs_level)):
+            if count == 0:
+                mobs_level[0] = 2
             else:
-                level += 1
+                mobs_level[count] = 1
 
     for level in mobs_level:
+        suitable_mobs = db_sess.query(Mobs_list).filter(Mobs_list.level == char.level + level).all()
         # находим рандомного моба соответствующего по лвлу
-        mob = db_sess.query(Mobs_list).filter(Mobs_list.id == random.randrange(1, 2),
-                                              Mobs_list.level == level).first()
+        mob = random.choice(suitable_mobs)
         Mob = Mobs(
             hp=mob.hp,
             armor=mob.armor,
