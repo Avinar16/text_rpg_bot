@@ -14,8 +14,3 @@ class Rooms(SqlAlchemyBase, SerializerMixin):
                                 sqlalchemy.ForeignKey("room_list.id"))
     name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     description = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    # тут можно добавить backref, если мы хотим знать, в каких комнатах находится конкретный моб в модели мобов,
-    # например backref='rooms' создать у модели Mobs поле rooms, но вряд ли это подходит нам в данном случае.
-    # аналогично
-    items = orm.relation("Items",
-                         secondary="items_in_room")

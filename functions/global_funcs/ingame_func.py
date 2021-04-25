@@ -4,11 +4,12 @@ from data.inventory import Inventory
 from data.items import Items
 from telegram.ext import ConversationHandler
 from functions.debug_func.char_defaut import char_default
+from functions.debug_func.clean_room import clean_room
 from data.keyboards import inv_keyboard
 from data.users import User
 from functions.service_funcs.get_data import get_data_rooms
 from functions.global_funcs.room_funcs import *
-from functions.service_funcs.Updater_db_file import *
+from functions.service_funcs.create_room import *
 from functions.service_funcs.get_data import *
 import random
 
@@ -62,6 +63,8 @@ Exp - {current_char.exp}''', )
 # Прерывание игры
 def end_game(update, context):
     db_sess = db_session.create_session()
+    # убираем комнату
+    clean_room(update)
     # убираем персонажа
     char_default(update)
     # убираем in_game юзера

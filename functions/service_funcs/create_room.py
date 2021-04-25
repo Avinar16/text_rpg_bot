@@ -5,12 +5,13 @@ from data.room_list import Room_list
 from data.mobs import Mobs
 from functions.service_funcs.get_data import *
 from functions.global_funcs.room_funcs import *
+from functions.debug_func.clean_room import clean_room
 
 
 def create_room(update, context):
     char, db_sess = get_data_character(update, return_sess=True)
-    # удаляем старую
-    db_sess.delete(char.room)
+    # удаляем старую комнату и всю инфу о ней
+    clean_room(update)
 
     # Создаем новую комнату, записываем ее в базу
     base_room_id = random.randrange(2, 11)

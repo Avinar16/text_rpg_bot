@@ -1,5 +1,6 @@
 import random
 from data.mobs import Mobs
+from data.items_in_room import Items_in_room
 from data.items import Items
 from data.mobs_list import Mobs_list
 from data.rooms import Rooms
@@ -10,35 +11,43 @@ from data import db_session
 def add_items(update, context):
     char, db_sess = get_data_character(update, return_sess=True)
     # События
-    item_encounter = random.randrange(1, 22)
+    item_encounter = random.randrange(1, 21)
     item_count = random.randrange(1, 4)
 
     items_level = [0] * item_count
 
-    # худший исход
-    if item_encounter <= 6:
-        # no items
-        return
     # Самый положительный исход
-    elif item_encounter == 21:
+    if item_encounter == 20:
         # add 1 item +2 level and other +0 level
         items_level[0] = 2
-    # положительный исход
+    # Положительный исход
     elif item_encounter >= 17:
         # add 1 item +1 and other +0 level
         items_level[0] = 1
-    # отрицательный исход
-    else:
+    # нейтральный исход
+    elif item_encounter > 10:
         # add 1 item +0 and other -1 level
         if char.level != 1:
             items_level = [-1] * item_count
             items_level[0] = 0
-    print(item_encounter)
+    # отрицательный исход
+    elif item_encounter >= 6:
+        if char.level != 1:
+            items_level = [-1] * item_count
+    # нет вещей
+    else:
+        return
+
     for level in items_level:
         suitable_items = db_sess.query(Items).filter(Items.level == char.level + level).all()
+        # находим рандомный итем соответствующий по лвлу
         item = random.choice(suitable_items)
-        print(item.name)
-        char.room.items.append(item)
+
+        iir = Items_in_room()
+        iir.items = item
+        iir.rooms = char.room
+        db_sess.add(iir)
+
         db_sess.commit()
 
 
