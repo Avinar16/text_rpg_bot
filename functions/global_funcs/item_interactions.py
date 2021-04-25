@@ -1,9 +1,7 @@
 from data import db_session
 from data.inventory import Inventory
-from functions.service_funcs.inv_back import inv_back
 from functions.service_funcs.get_data import get_data_character
 from functions.service_funcs.item_usages import item_usages
-from data.states import *
 
 
 def drop(update, context, items, inv_obj):

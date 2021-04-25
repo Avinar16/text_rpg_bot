@@ -1,5 +1,3 @@
-from data import db_session
-from telegram.ext import Handler
 from functions.service_funcs.get_data import get_data_character
 from functions.service_funcs.timer import *
 

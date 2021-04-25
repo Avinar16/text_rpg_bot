@@ -1,4 +1,4 @@
-from functions.global_funcs.ingame_func import inventory
+from functions.global_funcs.ingame_function.in_game_inv import inventory
 from telegram import ReplyKeyboardMarkup
 from data.keyboards import exit_room_keyboard
 from data.states import *

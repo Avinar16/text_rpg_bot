@@ -1,11 +1,9 @@
 import random
-from data.mobs import Mobs
 from data.items_in_room import Items_in_room
 from data.items import Items
 from data.mobs_list import Mobs_list
 from data.rooms import Rooms
 from functions.service_funcs.get_data import *
-from data import db_session
 
 
 def add_items(update, context):
