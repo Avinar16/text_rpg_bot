@@ -22,8 +22,11 @@ def start(update, context):
 
 def record(update, context):
     # Вывести рекорд
-    best_score = get_data_user(update).best_score
-    update.message.reply_text(f'Ваш рекорд - {best_score}')
+    user = get_data_user(update)
+    result = f'Ваш рекорд - {user.best_score}\n'
+    if user.in_game:
+        result += f'Текущий счет комнат - {user.score}'
+    update.message.reply_text(result)
 
 
 def help(update, context):

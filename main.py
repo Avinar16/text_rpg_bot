@@ -5,6 +5,7 @@ from functions.global_funcs.standart_func import *
 from functions.global_funcs.ingame_func import *
 from functions.global_funcs.inventory import *
 from functions.service_funcs.registration import register_char
+from functions.global_funcs.fight import enemy_choose
 from data.states import *
 import os
 
@@ -31,7 +32,12 @@ def main():
             EXIT: [CommandHandler('West', enter_room), CommandHandler('North', enter_room),
                    CommandHandler('East', enter_room),
                    CommandHandler("inventory", inventory),
-                   CommandHandler("stats", print_stats)],
+                   ],
+            # Fight states
+            ENEMY_CHOOSE: [MessageHandler(filters=(Filters.text | Filters.command), callback=enemy_choose)],
+            ENEMY_INTERACTION: [],
+            # Loot states (maybe)
+
             # Inventory states
             INVENTORY: [MessageHandler(filters=(Filters.text | Filters.command), callback=item_choose)],
             ITEM_INTERACTION: [MessageHandler(filters=(Filters.text | Filters.command), callback=item_interaction)],
@@ -39,6 +45,7 @@ def main():
         fallbacks=[CommandHandler('end_game', callback=end_game)],
     )
 
+    dp.add_handler(CommandHandler("stats", print_stats))
     dp.add_handler(CommandHandler("record", record))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(conv_handler)

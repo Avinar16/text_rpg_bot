@@ -1,7 +1,7 @@
 from data.users import User
 from data.items import Items
 from data.keyboards import exit_room_keyboard
-from functions.service_funcs.get_data import get_data_rooms
+from functions.service_funcs.get_data import get_data_rooms, get_data_user
 from data.character import Character
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from data.inventory import Inventory
