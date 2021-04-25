@@ -6,10 +6,11 @@ import sqlalchemy.ext.declarative as dec
 SqlAlchemyBase = dec.declarative_base()
 
 __factory = None
-
+__session = None
 
 def global_init(db_file):
     global __factory
+    global __session
 
     if __factory:
         return
@@ -22,6 +23,7 @@ def global_init(db_file):
 
     engine = sa.create_engine(conn_str, echo=False)
     __factory = orm.sessionmaker(bind=engine, expire_on_commit=False)
+    __session = __factory()
 
     from . import __all_models
 
@@ -29,5 +31,5 @@ def global_init(db_file):
 
 
 def create_session() -> Session:
-    global __factory
-    return __factory()
+    global __session
+    return __session
