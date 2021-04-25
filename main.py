@@ -5,13 +5,11 @@ from functions.global_funcs.standart_func import *
 from functions.global_funcs.ingame_func import *
 from functions.global_funcs.inventory import *
 from functions.service_funcs.registration import register_char
-
+from data.states import *
 import os
 
 load_dotenv('.env')
 db_session.global_init("db/rpg.db")
-
-REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
 
 
 def main():
@@ -30,7 +28,6 @@ def main():
             REGISTER: [MessageHandler(filters=Filters.text, callback=register_char)],
 
             # room states
-            ENTER: [MessageHandler(filters=(Filters.text | Filters.command), callback=enter_room)],
             EXIT: [CommandHandler('West', enter_room), CommandHandler('North', enter_room),
                    CommandHandler('East', enter_room),
                    CommandHandler("inventory", inventory),

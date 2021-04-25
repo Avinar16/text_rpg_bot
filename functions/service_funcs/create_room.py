@@ -9,9 +9,10 @@ from functions.debug_func.clean_room import clean_room
 
 
 def create_room(update, context):
-    char, db_sess = get_data_character(update, return_sess=True)
-    # удаляем старую комнату и всю инфу о ней
+    # удаляем старую комнату
     clean_room(update)
+
+    char, db_sess = get_data_character(update, return_sess=True)
 
     # Создаем новую комнату, записываем ее в базу
     base_room_id = random.randrange(2, 11)

@@ -3,8 +3,7 @@ from data.inventory import Inventory
 from functions.service_funcs.inv_back import inv_back
 from functions.service_funcs.get_data import get_data_character
 from functions.service_funcs.item_usages import item_usages
-
-REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
+from data.states import *
 
 
 def drop(update, context, items, inv_obj):

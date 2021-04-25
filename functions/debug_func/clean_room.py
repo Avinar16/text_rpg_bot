@@ -9,3 +9,4 @@ def clean_room(update):
     for item in char.room.items:
         db_sess.delete(item)
     db_sess.delete(char.room)
+    db_sess.commit()

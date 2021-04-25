@@ -1,8 +1,7 @@
 from functions.service_funcs.registration import register_user
 from functions.service_funcs.get_data import get_data_user
 from functions.debug_func.user_default import user_default
-
-REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
+from data.states import *
 
 
 def start(update, context):
@@ -41,4 +40,3 @@ def help(update, context):
 /stats - Посмотреть характеристики персонажа
 / end_game - Завершить игру"""
         )
-        # user_default(update)

@@ -12,9 +12,7 @@ from functions.global_funcs.room_funcs import *
 from functions.service_funcs.create_room import *
 from functions.service_funcs.get_data import *
 import random
-
-# Стейты из ConversationHandler файла main
-REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
+from data.states import *
 
 
 def inventory(update, context):
@@ -78,6 +76,7 @@ def end_game(update, context):
 def enter_room(update, context):
     room = create_room(update, context)
     update.message.reply_text(f'Вы пришли в {room.name} \n{room.description}')
+    return EXIT
 
 
 def fight(update, context):

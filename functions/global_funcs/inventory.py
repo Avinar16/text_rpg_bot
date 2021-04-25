@@ -5,8 +5,7 @@ from data.item_types import Item_types
 from .ingame_func import inventory
 from .item_interactions import *
 from functions.service_funcs.inv_back import inv_back
-
-REGISTER, ENTER, EXIT, INVENTORY, ITEM_INTERACTION, END_GAME = range(1, 7)
+from data.states import *
 
 
 def item_choose(update, context):
@@ -27,7 +26,10 @@ def item_choose(update, context):
         # Вывод выбранного предмета и его описания
         result = f"{item.name}, {item_type.name}, \n"
         result += f'{item.description} \n'
-
+        if item.item_type_id == 1:
+            result += f'Атака - {item.attack_armor}\n'
+        elif item.item_type_id == 2:
+            result += f'Защита - {item.attack_armor}\n'
         # Надето ли?
         if inv_obj.is_equiped:
             result += f'Надето \n'
@@ -59,7 +61,6 @@ def item_interaction(update, context):
     elif text == '/drop':
         drop(update, context, item, inv_obj)
         update.message.reply_text('Предмет волшебным образом растворился у вас в руках')
-        # Вернуться в инвентарь
     elif item.item_type_id == 1 or item.item_type_id == 2:
         if text == '/equip':
             equip(update, context, item, inv_obj)
