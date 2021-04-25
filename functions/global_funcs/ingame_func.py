@@ -3,6 +3,7 @@ from telegram import ReplyKeyboardMarkup
 from data.inventory import Inventory
 from data.items import Items
 from telegram.ext import ConversationHandler
+from functions.global_funcs.fight import start_fight
 from functions.debug_func.char_defaut import char_default
 from functions.debug_func.clean_room import clean_room
 from data.keyboards import *
@@ -77,46 +78,14 @@ def end_game(update, context):
 
 def enter_room(update, context):
     room = create_room(update, context)
-    char, db_sess = get_data_character(update, return_sess=True)
 
     # levelup+record check
     levelup_check(update, context)
     record_check(update, context)
 
-    if room.mobs:
-        # Через первого моба в комнате будем узнавать чей первый ход
-        mob_fromlist = db_sess.query(Mobs_list).filter(Mobs_list.id == room.mobs[0].mob_id).first()
-        # Начало строки вывода, описание комнаты
-        result = f'Вы пришли в {room.name} \n{room.description}\n'
-        # Определение первого хода
-        # если первый моб из всех <= уровнем чем игрок, то первый ход - игрока
-        if mob_fromlist.level <= char.level:
-            result += 'В комнате враги!\nВы ходите первым, выберите врага для взаимодействия\n'
-        # если mob.lvl > char.lvl, первый ход- врагов
-        else:
-            result += 'В комнате враги!\nХод врага.\n'
-            # hit
-        result_dict = {}
-        for count, mob in zip(range(1, len(room.mobs) + 1), room.mobs):
-            # добавление мобов в словарь
-            mob_fromlist = db_sess.query(Mobs_list).filter(Mobs_list.id == mob.mob_id).first()
-            result_dict[count] = mob
+    return start_fight(update, context)
 
-            # добавление текста для вывода
-            result += f'{count}. - {mob_fromlist.name}, {mob_fromlist.level} уровня\n'
-        context.user_data['mobs_in_fight'] = result_dict
 
-        # init клавиатуры
-        reply_keyboard = fight_keyboard
-        markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
-        # вывод текста, вывод новой клавиатуры
-        update.message.reply_text(result, reply_markup=markup)
-        # Выбор моба
-        return ENEMY_CHOOSE
-
-    else:
-        update.message.reply_text(f'Вы пришли в {room.name} \n{room.description}\n')
-        return EXIT
 
 
 """

@@ -31,7 +31,7 @@ def main():
             # room states
             EXIT: [CommandHandler('West', enter_room), CommandHandler('North', enter_room),
                    CommandHandler('East', enter_room),
-                   CommandHandler("inventory", inventory),
+                   CommandHandler("inventory", inventory)
                    ],
             # Fight states
             ENEMY_CHOOSE: [MessageHandler(filters=(Filters.text | Filters.command), callback=enemy_choose)],
