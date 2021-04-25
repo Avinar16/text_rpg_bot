@@ -1,6 +1,5 @@
 from functions.service_funcs.registration import register_user
 from functions.service_funcs.get_data import get_data_user
-from functions.debug_func.user_default import user_default
 from data.states import *
 
 

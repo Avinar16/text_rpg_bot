@@ -1,8 +1,11 @@
 # Импортируем необходимые классы.
 from dotenv import load_dotenv
-from telegram.ext import Updater, MessageHandler, Filters, ConversationHandler, CommandHandler
+from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, ConversationHandler
 from functions.global_funcs.standart_func import *
-from functions.global_funcs.ingame_func import *
+from functions.global_funcs.ingame_function.end_game import end_game
+from functions.global_funcs.ingame_function.enter_room import enter_room
+from functions.global_funcs.ingame_function.in_game_inv import inventory
+from functions.global_funcs.ingame_function.print_stats import print_stats
 from functions.global_funcs.inventory import *
 from functions.service_funcs.registration import register_char
 from data.states import *

@@ -3,12 +3,11 @@ from data.items import Items
 from data.keyboards import exit_room_keyboard
 from functions.service_funcs.get_data import get_data_rooms
 from data.character import Character
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
+from telegram import ReplyKeyboardMarkup
 from data.inventory import Inventory
 from data import db_session
 from data.rooms import Rooms
 from data.room_list import Room_list
-from functions.debug_func.char_defaut import char_default
 from data.states import *
 
 
