@@ -27,3 +27,4 @@ class Character(SqlAlchemyBase, SerializerMixin):
 
 
 
+
