@@ -1,6 +1,7 @@
 from data.states import *
 from functions.service_funcs.get_data import get_data_character
 from data.mobs_list import Mobs_list
+from math import floor
 from data.keyboards import fight_keyboard
 from telegram import ReplyKeyboardMarkup
 
@@ -9,6 +10,9 @@ def enemy_choose(update, context):
     count = update.message.text
     if count == '/back':
         return start_fight(update, context)
+    elif '/attack' in count:
+        if int(count.split()[1]) and count.split()[1].isdigit() in context.user_data['mobs_in_fight'].keys():
+            return enemy_interaction(update, context, count.split()[1])
     # если введенный индекс в списке существующих мобов
     if count.isdigit() and int(count) in context.user_data['mobs_in_fight'].keys():
         # переменная для вывода текста
@@ -22,7 +26,8 @@ HP - {mob.hp} / {mob_info.max_hp}
 Защита - {mob_info.armor}
 Опыта падает - {mob_info.exp_drop}
 
-/back - вернуться к списку врагов"""
+/back - вернуться к списку врагов
+/attack (Номер моба) - Начать битву с монстром"""
         # нужно вернуть клаву
         update.message.reply_text(result)
     else:
@@ -30,8 +35,43 @@ HP - {mob.hp} / {mob_info.max_hp}
         return ENEMY_CHOOSE
 
 
-def enemy_interaction(update, context):
-    pass
+def enemy_interaction(update, context, count):
+    #Выбранный моб и его инфа
+    chosen_mob, mob_info = context.user_data['mobs_in_fight'][int(count)]
+    char, db_sess = get_data_character(update, return_sess=True)
+    #Устанавливаем ход персонажа
+    turn = True
+    if turn:
+        # По идее переключит атаку на атаку моба.
+        turn = False
+        #Указываем чья сейчас атака
+        whose_attack = char
+        # Указываем кто получает по щам
+        who_gets_damage = chosen_mob
+        add_damage(whose_attack, who_gets_damage)
+    else:
+        #Ну тут атакует моб
+        whose_attack = chosen_mob
+        #Ну тут по факту огребает чел...
+        who_gets_damage = char
+        add_damage(whose_attack, who_gets_damage)
+    print(chosen_mob.hp, char.hp)
+
+
+def add_damage(whose_attack, who_gets_damage):
+    #Ну тут всё предельно просто тот кто атакует просто производит свой удар и уже
+    # тот кто получает свой заслуженный пинок записывает его себе в - хп
+    armor = int(who_gets_damage.armor)
+    # Вычисление кооэфицента поглощения брони(прям как в доте)))
+    damage_absorption = ((0.06 * armor) / (1 + 0.06 * armor))
+    damage_absorption = round(damage_absorption, 2)
+    # Само вычисление атаки с учётом брони
+    damage = int(whose_attack.attack) - (int(whose_attack.attack) * damage_absorption)
+    #Ну и округление в меньшую сторону чтоб не заморачиваться с дробными числами
+    new_hp = str(floor(int(who_gets_damage.hp) - damage))
+    setattr(who_gets_damage, 'hp', new_hp)
+
+
 
 
 def start_fight(update, context):
