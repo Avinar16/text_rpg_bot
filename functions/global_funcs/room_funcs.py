@@ -37,7 +37,10 @@ def add_items(update, context):
         return
 
     for level in items_level:
-        suitable_items = db_sess.query(Items).filter(Items.level == char.level + level).all()
+        item_level = char.level + level
+        if item_level > 10:
+            item_level = random.randrange(7, 11)
+        suitable_items = db_sess.query(Items).filter(Items.level == item_level).all()
         # находим рандомный итем соответствующий по лвлу
         item = random.choice(suitable_items)
 
@@ -81,7 +84,12 @@ def add_mobs(update, context, room):
                     mobs_level = [2]
 
     for level in mobs_level:
-        suitable_mobs = db_sess.query(Mobs_list).filter(Mobs_list.level == char.level + level).all()
+        mob_baff = False
+        mob_level = char.level + level
+        if mob_level > 10:
+            mob_level = random.randrange(7, 11)
+            mob_baff = True
+        suitable_mobs = db_sess.query(Mobs_list).filter(Mobs_list.level == mob_level).all()
         # находим рандомного моба соответствующего по лвлу
         mob = random.choice(suitable_mobs)
         Mob = Mobs(
@@ -90,6 +98,13 @@ def add_mobs(update, context, room):
             attack=mob.attack,
             room_id=room.id
         )
+        print(Mob.hp)
+        print(Mob.attack)
+        if mob_baff:
+            Mob.hp = round(Mob.hp * 1.5)
+            print(Mob.hp)
+            Mob.attack = round(Mob.attack * 1.5)
+            print(Mob.attack)
         Mob.mobs = mob
         mob_room = db_sess.query(Rooms).filter(Rooms.id == room.id).first()
         Mob.rooms = mob_room
