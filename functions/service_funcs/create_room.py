@@ -1,5 +1,5 @@
 from functions.global_funcs.room_funcs import *
-from functions.debug_func.clean_room import clean_room
+from functions.to_default_func.clean_room import clean_room
 from functions.service_funcs.enter_room_checks import *
 
 

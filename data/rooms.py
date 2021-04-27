@@ -3,7 +3,6 @@ from .db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 
 
-
 class Rooms(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'rooms'
 

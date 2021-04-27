@@ -10,7 +10,6 @@ from data.item_types import Item_types
 from .ingame_function.in_game_inv import inventory
 
 
-
 def loot_handler(update, context):
     char = get_data_character(update)
     db_sess = db_session.create_session()

@@ -1,10 +1,10 @@
 from functions.service_funcs.create_room import *
 from telegram.ext import ConversationHandler
-from functions.debug_func.char_defaut import char_default
+from functions.to_default_func.char_defaut import char_default
 from telegram import ReplyKeyboardMarkup
 from data.keyboards import not_in_game_keyboard
 
-# context=False
+
 def end_game(update, context):
     print('ENDED')
     db_sess = db_session.create_session()

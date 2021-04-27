@@ -5,11 +5,7 @@ from functions.global_funcs.fight import fight_handler
 def enter_room(update, context):
     room = create_room(update, context)
 
-    # levelup+record check
-
-
     # Определение первого хода
-
     char = get_data_character(update)
     if char.room.mobs:
         db_sess = db_session.create_session()

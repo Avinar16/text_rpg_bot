@@ -9,13 +9,10 @@ class Mobs(SqlAlchemyBase, SerializerMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
-    # room_id = sqlalchemy.Column(sqlalchemy.Integer,
-    #                            sqlalchemy.ForeignKey('rooms.id'), primary_key=True)
+
     room_id = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey('rooms.id'))
 
-    # mob_id = sqlalchemy.Column(sqlalchemy.Integer,
-    #                               sqlalchemy.ForeignKey('mobs_list.id'), primary_key=True)
     mob_id = sqlalchemy.Column(sqlalchemy.Integer,
                                sqlalchemy.ForeignKey('mobs_list.id'))
 

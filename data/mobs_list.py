@@ -3,7 +3,6 @@ from .db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 
 
-
 class Mobs_list(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'mobs_list'
 
