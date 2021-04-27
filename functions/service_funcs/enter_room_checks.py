@@ -6,7 +6,7 @@ def levelup_check(update, context):
     if char.level == 1:
         exp_need_to_lvlup = 1
     else:
-        exp_need_to_lvlup = 10 * (char.level * 0.5) * (char.level // 2)
+        exp_need_to_lvlup = 15 * (char.level * 0.5) * (char.level // 2)
     if char.exp // exp_need_to_lvlup > 0:
         char.level += 1
         char.exp -= exp_need_to_lvlup

@@ -7,21 +7,16 @@ def item_usages(update, context, item):
     context.user_data['task_info'] = {'task': end_timer,
                                       'update': update,
                                       "item": item}
+    # Логика лечения от зелий
     if item.name == 'Малое зелье здоровья':
-        # Логика лечения от зелья
-        hp_to_set = (char.max_hp - char.hp) - 2
-        if hp_to_set <= 0:
-            char.hp = char.max_hp
-        else:
-            char.hp = char.max_hp - hp_to_set
-        update.message.reply_text(f'Вы исцелились. Здоровье {char.hp} / {char.max_hp}')
+        heal(update, context, char, 6)
+    elif item.name == 'Зелье здоровья':
+        heal(update, context, char, 10)
     # Логика зелья силы с таймером
     elif item.name == 'Малое зелье силы':
-        char.attack += 2
-        # Вся инфа необходимая для обработки
-        context.user_data['task_info']['duration'] = 40
-        db_sess.commit()
-        set_timer(update, context)
+        buff(update, context, char, 4, 40, db_sess)
+    elif item.name == 'Зелье силы':
+        buff(update, context, char, 8, 40, db_sess)
 
 
 def end_timer(context):
@@ -31,8 +26,26 @@ def end_timer(context):
     # Обрабатываем
     char, db_sess = get_data_character(data['update'], return_sess=True)
     item = data['item']
-    if item.name == 'Малое зелье силы':
-        char.attack -= 2
+    if 'елье силы' in item.name:
+        char.attack -= data['effect']
     db_sess.commit()
     # Выводим текст
     data['update'].message.reply_text(f'Действие эффекта от {item.name} закончилось!')
+
+
+def heal(update, context, char, effect):
+    hp_to_set = (int(char.max_hp) - int(char.hp)) - int(effect)
+    if hp_to_set <= 0:
+        char.hp = char.max_hp
+    else:
+        char.hp = char.max_hp - hp_to_set
+    update.message.reply_text(f'Вы исцелились. Здоровье {char.hp} / {char.max_hp}')
+
+
+def buff(update, context, char, effect, duration, db_sess):
+    effect = int(effect)
+    char.attack += effect
+    context.user_data['task_info']['duration'] = duration
+    context.user_data['task_info']['effect'] = effect
+    db_sess.commit()
+    set_timer(update, context)

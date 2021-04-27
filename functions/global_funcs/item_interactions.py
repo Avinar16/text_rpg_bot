@@ -10,9 +10,8 @@ def drop(update, context, items, inv_obj):
     inventory_item = db_sess.query(Inventory).filter(Inventory.item_id == items.id).first()
     fr_inv_obj = db_sess.query(Inventory).filter(Inventory.char_id == inv_obj.char_id,
                                                  Inventory.item_id == inv_obj.item_id).first()
-    print(fr_inv_obj.is_equiped)
+
     fr_inv_obj.is_equiped = False
-    print(fr_inv_obj.is_equiped)
 
     equip(update, context, items, inv_obj)
 
