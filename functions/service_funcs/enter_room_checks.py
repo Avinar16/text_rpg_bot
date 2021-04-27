@@ -10,6 +10,13 @@ def levelup_check(update, context):
     if char.exp // exp_need_to_lvlup > 0:
         char.level += 1
         char.exp -= exp_need_to_lvlup
+        char.armor += 2 * (char.level // 2)
+        char.attack += 3 * (char.level // 2)
+        char.max_hp += 4 * (char.level // 2)
+        char.hp = char.max_hp
+        update.message.reply_text(f'''Ваш персонаж получил {char.level} уровень!
+Здоровье восстановлено, характеристики улучшены''')
+
     db_sess.commit()
 
 

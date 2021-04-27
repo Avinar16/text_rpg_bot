@@ -75,7 +75,10 @@ def add_mobs(update, context, room):
             if count == 0:
                 mobs_level[0] = 2
             else:
-                mobs_level[count] = 1
+                if char.level != 1:
+                    mobs_level[count] = -1
+                else:
+                    mobs_level = [2]
 
     for level in mobs_level:
         suitable_mobs = db_sess.query(Mobs_list).filter(Mobs_list.level == char.level + level).all()

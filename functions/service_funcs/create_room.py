@@ -1,5 +1,6 @@
 from functions.global_funcs.room_funcs import *
 from functions.debug_func.clean_room import clean_room
+from functions.service_funcs.enter_room_checks import *
 
 
 def create_room(update, context):
@@ -17,6 +18,10 @@ def create_room(update, context):
         name=base.name,
         description=base.description
     )
+
+    levelup_check(update, context)
+    record_check(update, context)
+
     char.room = new_room
     db_sess.add(new_room)
     db_sess.commit()

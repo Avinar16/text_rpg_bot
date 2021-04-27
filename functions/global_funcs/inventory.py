@@ -23,9 +23,9 @@ def item_choose(update, context):
         result = f"{item.name}, {item_type.name}, \n"
         result += f'{item.description} \n'
         if item.item_type_id == 1:
-            result += f'Атака - {item.attack_armor}\n'
+            result += f'Атака: {item.attack_armor}\n'
         elif item.item_type_id == 2:
-            result += f'Защита - {item.attack_armor}\n'
+            result += f'Защита: {item.attack_armor}\n'
         # Надето ли?
         if inv_obj.is_equiped:
             result += f'Надето \n'

@@ -10,18 +10,15 @@ def drop(update, context, items, inv_obj):
     inventory_item = db_sess.query(Inventory).filter(Inventory.item_id == items.id).first()
     fr_inv_obj = db_sess.query(Inventory).filter(Inventory.char_id == inv_obj.char_id,
                                                  Inventory.item_id == inv_obj.item_id).first()
+    print(fr_inv_obj.is_equiped)
     fr_inv_obj.is_equiped = False
-    db_sess.commit()
+    print(fr_inv_obj.is_equiped)
 
     equip(update, context, items, inv_obj)
 
     db_sess.delete(inventory_item)
     db_sess.commit()
 
-
-# ////////////////////////////////
-# нужно добавить учет характеристик
-# ////////////////////////////////
 
 def equip(update, context, items, inv_obj):
     current_char, db_sess = get_data_character(update, return_sess=True)

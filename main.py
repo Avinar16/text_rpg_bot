@@ -8,8 +8,9 @@ from functions.global_funcs.ingame_function.in_game_inv import inventory
 from functions.global_funcs.ingame_function.print_stats import print_stats
 from functions.global_funcs.inventory import *
 from functions.service_funcs.registration import register_char
-from functions.global_funcs.fight import enemy_choose
+from functions.global_funcs.fight import enemy_choose, enemy_interaction
 from data.states import *
+from functions.global_funcs.loot import loot_choose, loot_interaction
 import os
 
 load_dotenv('.env')
@@ -33,21 +34,19 @@ def main():
 
             # room states
             EXIT: [CommandHandler('West', enter_room), CommandHandler('North', enter_room),
-                   CommandHandler('East', enter_room),
-                   CommandHandler("inventory", inventory)
-                   ],
+                   CommandHandler('East', enter_room), CommandHandler("inventory", inventory)],
             # Fight states
             ENEMY_CHOOSE: [MessageHandler(filters=(Filters.text | Filters.command), callback=enemy_choose)],
-            ENEMY_INTERACTION: [],
-            # Loot states (maybe)
-
+            ENEMY_INTERACTION: [MessageHandler(filters=(Filters.text | Filters.command), callback=enemy_interaction)],
+            # Loot states
+            LOOT_CHOOSE: [MessageHandler(filters=(Filters.text | Filters.command), callback=loot_choose)],
+            LOOT_INTERACTION: [MessageHandler(filters=(Filters.text | Filters.command), callback=loot_interaction)],
             # Inventory states
             INVENTORY: [MessageHandler(filters=(Filters.text | Filters.command), callback=item_choose)],
             ITEM_INTERACTION: [MessageHandler(filters=(Filters.text | Filters.command), callback=item_interaction)],
         },
         fallbacks=[CommandHandler('end_game', callback=end_game)],
     )
-
     dp.add_handler(CommandHandler("stats", print_stats))
     dp.add_handler(CommandHandler("record", record))
     dp.add_handler(CommandHandler("help", help))

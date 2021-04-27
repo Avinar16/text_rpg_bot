@@ -39,11 +39,11 @@ def register_char(update, context):
         user_character = Character(
             user_id=user_info.id,
             name=update.message.text,
-            hp=5,
-            max_hp=5,
+            hp=10,
+            max_hp=10,
             level=1,
             exp=0,
-            armor=1,
+            armor=3,
             attack=3)
         db_sess.add(user_character)
         db_sess.add(new_room)
