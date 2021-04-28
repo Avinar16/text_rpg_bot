@@ -6,14 +6,20 @@ from functions.service_funcs.item_usages import item_usages
 
 def drop(update, context, items, inv_obj):
     db_sess = db_session.create_session()
+    char = get_data_character(update)
 
     inventory_item = db_sess.query(Inventory).filter(Inventory.item_id == items.id).first()
     fr_inv_obj = db_sess.query(Inventory).filter(Inventory.char_id == inv_obj.char_id,
                                                  Inventory.item_id == inv_obj.item_id).first()
 
-    fr_inv_obj.is_equiped = False
+    update.message.reply_text(f'Вы выкинули {fr_inv_obj.items.name}')
 
-    equip(update, context, items, inv_obj)
+    if fr_inv_obj.is_equiped:
+        if fr_inv_obj.items.item_type_id == 1:
+            char.attack -= fr_inv_obj.items.attack_armor
+        elif fr_inv_obj.items.item_type_id == 2:
+            char.armor -= fr_inv_obj.items.attack_armor
+        fr_inv_obj.is_equiped = False
 
     db_sess.delete(inventory_item)
     db_sess.commit()
@@ -46,8 +52,6 @@ def equip(update, context, items, inv_obj):
 
         if fr_inv_obj.items.item_type_id == 1:
             current_char.attack -= fr_inv_obj.items.attack_armor
-
-
 
         elif fr_inv_obj.items.item_type_id == 2:
             current_char.armor -= fr_inv_obj.items.attack_armor
