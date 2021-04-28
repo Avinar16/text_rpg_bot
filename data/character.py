@@ -16,6 +16,8 @@ class Character(SqlAlchemyBase, SerializerMixin):
 
     room = orm.relation('Rooms', backref="character")
 
+    inventory = orm.relationship("Inventory", cascade="all, delete, delete-orphan")
+
     hp = sqlalchemy.Column(sqlalchemy.Integer, default=5)
     max_hp = sqlalchemy.Column(sqlalchemy.Integer, default=5)
 
@@ -24,7 +26,3 @@ class Character(SqlAlchemyBase, SerializerMixin):
 
     armor = sqlalchemy.Column(sqlalchemy.Integer, default=1)
     attack = sqlalchemy.Column(sqlalchemy.Integer, default=1)
-
-
-
-
