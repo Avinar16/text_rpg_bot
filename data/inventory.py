@@ -8,10 +8,10 @@ class Inventory(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'inventory'
     # что с чем связываем - character.id с
     char_id = sqlalchemy.Column(sqlalchemy.Integer,
-                                sqlalchemy.ForeignKey('character.id'))
+                                sqlalchemy.ForeignKey('character.id'), primary_key=True)
     # items.id
     item_id = sqlalchemy.Column(sqlalchemy.Integer,
-                                sqlalchemy.ForeignKey('items.id'))
+                                sqlalchemy.ForeignKey('items.id'), primary_key=True)
 
     items = orm.relationship("Items", backref="characters")
     character = orm.relationship("Character", backref="inventory")
