@@ -71,8 +71,8 @@ def enemy_turn(update, context):
     char = get_data_character(update)
     for mob, mob_info in context.user_data['mobs_in_fight'].values():
         do_damage(update, context, mob, char)
-    if int(char.hp) <= 0:
-        return check_die(update, context, char)
+        if int(char.hp) <= 0:
+            return check_die(update, context, char)
     context.user_data['turn'] = True
     return ENEMY_CHOOSE
 

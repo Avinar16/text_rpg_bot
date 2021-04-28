@@ -2,6 +2,7 @@ from functions.global_funcs.room_funcs import *
 from functions.to_default_func.clean_room import clean_room
 from functions.service_funcs.enter_room_checks import *
 from data.room_list import Room_list
+import random
 
 
 def create_room(update, context):
@@ -9,15 +10,13 @@ def create_room(update, context):
     clean_room(update)
 
     char, db_sess = get_data_character(update, return_sess=True)
-    rooms = db_sess.query(Room_list).all()
+    room = random.choice(db_sess.query(Room_list).all())
     # Создаем новую комнату, записываем ее в базу
-    base_room_id = random.randrange(2, len(rooms) + 1)
-    base = db_sess.query(Room_list).filter(Room_list.id == base_room_id).first()
 
     new_room = Rooms(
-        base_id=base_room_id,
-        name=base.name,
-        description=base.description
+        base_id=room.id,
+        name=room.name,
+        description=room.description
     )
 
     levelup_check(update, context)
