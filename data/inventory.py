@@ -14,6 +14,6 @@ class Inventory(SqlAlchemyBase, SerializerMixin):
                                 sqlalchemy.ForeignKey('items.id'), primary_key=True)
 
     items = orm.relationship("Items", backref="characters")
-    character = orm.relationship("Character", backref="inventory")
+    character = orm.relationship("Character")
 
     is_equiped = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
