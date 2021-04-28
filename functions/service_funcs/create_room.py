@@ -25,8 +25,8 @@ def create_room(update, context):
     char.room = new_room
     db_sess.add(new_room)
     db_sess.commit()
-
-    add_mobs(update, context, new_room)
+    if not new_room.base_id == 14:
+        add_mobs(update, context, new_room)
     add_items(update, context)
 
     return new_room
