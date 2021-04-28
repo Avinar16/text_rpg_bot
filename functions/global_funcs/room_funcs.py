@@ -29,7 +29,7 @@ def add_items(update, context):
             items_level = [-1] * item_count
             items_level[0] = 0
     # отрицательный исход
-    elif item_encounter >= 6:
+    elif item_encounter >= 3:
         if char.level != 1:
             items_level = [-1] * item_count
     # нет вещей

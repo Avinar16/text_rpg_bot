@@ -34,7 +34,7 @@ def loot_handler(update, context):
         reply_keyboard = exit_room_keyboard
         markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
 
-        update.message.reply_text(f'Вы на выход{char.room.name}\n{char.room.description}', reply_markup=markup)
+        update.message.reply_text(f'Вы на выходе: {char.room.name}\n{char.room.description}', reply_markup=markup)
         return EXIT
 
 
