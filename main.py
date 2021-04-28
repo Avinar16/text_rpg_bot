@@ -15,12 +15,15 @@ import os
 
 load_dotenv('.env')
 db_session.global_init("db/rpg.db")
+PORT = int(os.environ.get('PORT', 5000))
+TOKEN = os.getenv("TOKEN")
+HEROKU_APP_NAME = os.getenv("HEROKU_APP_NAME")
 
 
 def main():
     # Создаём объект updater.
     # Вместо слова "TOKEN" надо разместить полученный от @BotFather токен
-    updater = Updater(os.getenv("TOKEN"), use_context=True)
+    updater = Updater(TOKEN, use_context=True)
 
     # Получаем из него диспетчер сообщений.
     dp = updater.dispatcher
@@ -53,8 +56,13 @@ def main():
     dp.add_handler(conv_handler)
 
     # Запускаем цикл приема и обработки сообщений.
-    updater.start_polling()
+    updater.start_webhook(listen="0.0.0.0",
+                          port=int(PORT),
+                          url_path=TOKEN, webhook_url=f"https://{HEROKU_APP_NAME}.herokuapp.com/{TOKEN}")
 
+    # Run the bot until you press Ctrl-C or the process receives SIGINT,
+    # SIGTERM or SIGABRT. This should be used most of the time, since
+    # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
 
 
