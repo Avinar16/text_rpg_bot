@@ -11,7 +11,7 @@ def end_game(update, context):
     # убираем комнату
     clean_room(update)
     # убираем персонажа
-    char_default(update)
+    char_default(update, context)
     # убираем in_game юзера
     user = db_sess.query(User).filter(User.tg_id == update.effective_user.id).first()
     user.in_game = False
