@@ -7,8 +7,6 @@ from functions.service_funcs.item_usages import item_usages
 def drop(update, context, items, inv_obj):
     db_sess = db_session.create_session()
     char = get_data_character(update)
-
-    inventory_item = db_sess.query(Inventory).filter(Inventory.item_id == items.id).first()
     fr_inv_obj = db_sess.query(Inventory).filter(Inventory.char_id == inv_obj.char_id,
                                                  Inventory.item_id == inv_obj.item_id).first()
 
@@ -21,7 +19,7 @@ def drop(update, context, items, inv_obj):
             char.armor -= fr_inv_obj.items.attack_armor
         fr_inv_obj.is_equiped = False
 
-    db_sess.delete(inventory_item)
+    db_sess.delete(fr_inv_obj)
     db_sess.commit()
 
 

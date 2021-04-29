@@ -38,6 +38,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\functions\global_funcs\room_funcs.py">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\functions\service_funcs\create_room.py">
           <value>
             <Attribute>

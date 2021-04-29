@@ -60,7 +60,7 @@ def add_mobs(update, context, room):
     mob_count = random.randrange(1, 4)
 
     # левелы мобов
-    mobs_level = [0] * mob_count
+    mobs_level = [0] * (mob_count + char.level // 3)
 
     # Самый положительный исход
     if mobs_encounter >= 18:
@@ -71,7 +71,7 @@ def add_mobs(update, context, room):
     elif mobs_encounter >= 13:
         # add mobs -1 level
         if char.level != 1:
-            mobs_level = [-1] * mob_count
+            mobs_level = [-1] * (mob_count + char.level // 3)
     # Отрицательный исход
     elif mobs_encounter <= 6:
         for count in range(len(mobs_level)):
@@ -82,6 +82,8 @@ def add_mobs(update, context, room):
                     mobs_level[count] = -1
                 else:
                     mobs_level = [2]
+    if char.level == 1:
+        mobs_level = [0] * mob_count
 
     for level in mobs_level:
         mob_baff = False

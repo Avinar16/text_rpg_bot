@@ -17,7 +17,7 @@ def enemy_choose(update, context):
     char = get_data_character(update)
     count = update.message.text
     if count == '/back':
-        return fight_handler(update, context)
+        return fight_handler(update, context, True)
     elif count == '/inventory':
         return inventory(update, context)
 
