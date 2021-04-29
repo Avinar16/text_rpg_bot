@@ -13,7 +13,6 @@ def inv_back(update, context, state):
     elif state == EXIT:
         update.message.reply_text('Возвращаемся')
         if get_data_character(update).room.mobs:
-            update.message.reply_text('Пока вы ковырялись в сумке, мобы напали!')
-            return fight_handler(update, context, False)
+            return fight_handler(update, context, True)
         else:
             return loot_handler(update, context)
