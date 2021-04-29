@@ -92,7 +92,7 @@ def do_damage(update, context, whose_attack, who_gets_damage):
     if hit >= 19:
         damage *= 2
         result += 'Критическая атака! Урон увеличен в 2 раза\n'
-    elif hit <= 4:
+    elif hit <= 2:
         damage = 0
         result += 'Промах!\n'
 
