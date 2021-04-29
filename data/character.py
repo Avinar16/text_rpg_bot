@@ -12,7 +12,7 @@ class Character(SqlAlchemyBase, SerializerMixin):
                                 sqlalchemy.ForeignKey("users.id"))  # внешний ключ на таблицу пользователей
     room_id = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("rooms.id"))  # внешний ключ на таблицу с комнатами
-    name = sqlalchemy.Column(sqlalchemy.String, nullable=False, unique=True)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
 
     room = orm.relation('Rooms', backref="character")
 
