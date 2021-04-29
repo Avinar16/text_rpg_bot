@@ -29,7 +29,7 @@ def register_user(update):
 def register_char(update, context):
     db_sess = db_session.create_session()
     user_info = update.effective_user
-    if not get_data_character():
+    if not get_data_character(update):
         base_room = db_sess.query(Room_list).filter(Room_list.id == 1).first()
         new_room = Rooms(
             base_id=base_room.id,
