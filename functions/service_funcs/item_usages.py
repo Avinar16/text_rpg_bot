@@ -18,6 +18,10 @@ def item_usages(update, context, item):
         heal(update, context, char, 5)
     elif item.name == 'Жаренная лапка кролика':
         heal(update, context, char, 10)
+    elif item.name == 'Фляга с Эстусом':
+        heal(update, context, char, 25)
+    elif item.name == 'Собачий корм':
+        heal(update, context, char, 55)
     # Логика зелья силы с таймером
     elif item.name == 'Малое зелье силы':
         buff(update, context, char, 4, 40, db_sess)
