@@ -26,3 +26,5 @@ class Character(SqlAlchemyBase, SerializerMixin):
 
     armor = sqlalchemy.Column(sqlalchemy.Integer, default=1)
     attack = sqlalchemy.Column(sqlalchemy.Integer, default=1)
+
+    is_alive = sqlalchemy.Column(sqlalchemy.Boolean, default=True)

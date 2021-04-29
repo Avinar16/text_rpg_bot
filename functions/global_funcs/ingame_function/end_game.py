@@ -20,6 +20,8 @@ def end_game(update, context):
     user.in_game = False
     db_sess.commit()
 
+    db_sess.close()
+
     # убираем персонажа
     char_default(update, context)
 

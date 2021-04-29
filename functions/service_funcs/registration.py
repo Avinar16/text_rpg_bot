@@ -9,6 +9,7 @@ from data import db_session
 from data.rooms import Rooms
 from data.room_list import Room_list
 from data.states import *
+from functions.service_funcs.get_data import get_data_character
 
 
 def register_user(update):
@@ -28,7 +29,7 @@ def register_user(update):
 def register_char(update, context):
     db_sess = db_session.create_session()
     user_info = update.effective_user
-    if not db_sess.query(Character).filter(Character.user_id == update.effective_user.id).first():
+    if not get_data_character():
         base_room = db_sess.query(Room_list).filter(Room_list.id == 1).first()
         new_room = Rooms(
             base_id=base_room.id,
@@ -44,7 +45,8 @@ def register_char(update, context):
             level=1,
             exp=0,
             armor=3,
-            attack=3)
+            attack=3,
+            is_alive=True)
         db_sess.add(user_character)
         db_sess.add(new_room)
 
