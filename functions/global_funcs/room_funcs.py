@@ -60,7 +60,7 @@ def add_mobs(update, context, room):
     mob_count = random.randrange(1, 4)
 
     # левелы мобов
-    mobs_level = [0] * (mob_count + char.level // 3)
+    mobs_level = [0] * (mob_count + char.level // 3) - 1
 
     # Самый положительный исход
     if mobs_encounter >= 18:
