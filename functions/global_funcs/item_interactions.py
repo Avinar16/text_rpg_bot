@@ -53,15 +53,15 @@ def equip(update, context, items, inv_obj):
     MAX_EQUIPED_WEAPON = 2
 
     # т.к inv_obj относится к другой сессии, то может содержать только собственную информацию
-    # и не подходит для изменения базы, fr_inv_obj = inv_obj, но текущей сессии
+    # и не подходит для изменения базы, fr_inv_obj == inv_obj, но текущей сессии
     fr_inv_obj = db_sess.query(Inventory).filter(Inventory.char_id == inv_obj.char_id,
                                                  Inventory.item_id == inv_obj.item_id).first()
 
     # unequip
     if fr_inv_obj.is_equiped:
+        #print(equiped_armor_b, equiped_armor_g)
         fr_inv_obj.is_equiped = False
         update.message.reply_text(f'Вы сняли {items.name}')
-
         if fr_inv_obj.items.item_type_id == 1:
             current_char.attack -= fr_inv_obj.items.attack_armor
         elif fr_inv_obj.items.item_type_id == 2:
@@ -75,31 +75,45 @@ def equip(update, context, items, inv_obj):
 
     # equip
     else:
-        # Если оружие
-        if fr_inv_obj.items.item_type_id == 1 and equiped_weapon < MAX_EQUIPED_WEAPON:
-            fr_inv_obj.is_equiped = True
-
-            current_char.attack += fr_inv_obj.items.attack_armor
-
-            update.message.reply_text(f'Оружие "{fr_inv_obj.items.name}" надето')
-        # Если броня
-        elif fr_inv_obj.items.item_type_id == 2 and equiped_armor_h < MAX_EQUIPED_ARMOR_I:
-            fr_inv_obj.is_equiped = True
-        elif fr_inv_obj.items.item_type_id == 4 and equiped_armor_b < MAX_EQUIPED_ARMOR_I:
-            fr_inv_obj.is_equiped = True
-        elif fr_inv_obj.items.item_type_id == 5 and equiped_armor_g < MAX_EQUIPED_ARMOR_I:
-            fr_inv_obj.is_equiped = True
-
-            current_char.armor += fr_inv_obj.items.attack_armor
-
-            update.message.reply_text(f'Броня "{fr_inv_obj.items.name}" надета')
         # Если превышен лимит
-        elif equiped_weapon >= MAX_EQUIPED_WEAPON or equiped_armor_h >= MAX_EQUIPED_ARMOR_I \
-                or (equiped_armor_h + equiped_armor_b + equiped_armor_g) >= MAX_EQUIPED_ARMOR_ALL or \
-                equiped_armor_full >= MAX_EQUIPED_ARMOR_I:
-            update.message.reply_text(f"""Надето слишком много предметов одного типа \n
+
+        for i in range(1, 6):
+            if fr_inv_obj.items.item_type_id != i or i == 3:
+                pass
+            else:
+                if i == 2 and fr_inv_obj.items.item_type_id == i and equiped_armor_b + 1 <= MAX_EQUIPED_ARMOR_I:
+                    equiped_armor_b += 1
+                    fr_inv_obj.is_equiped = True
+                    current_char.armor += fr_inv_obj.items.attack_armor
+                    update.message.reply_text(f'Броня "{fr_inv_obj.items.name}" надета')
+                elif i == 4 and fr_inv_obj.items.item_type_id == i and equiped_armor_h + 1 <= MAX_EQUIPED_ARMOR_I:
+                    equiped_armor_h += 1
+                    fr_inv_obj.is_equiped = True
+                    current_char.armor += fr_inv_obj.items.attack_armor
+                    update.message.reply_text(f'Броня "{fr_inv_obj.items.name}" надета')
+                elif i == 5 and fr_inv_obj.items.item_type_id == i and equiped_armor_g + 1 <= MAX_EQUIPED_ARMOR_I:
+                    equiped_armor_g += 1
+                    fr_inv_obj.is_equiped = True
+                    current_char.armor += fr_inv_obj.items.attack_armor
+                    update.message.reply_text(f'Броня "{fr_inv_obj.items.name}" надета')
+                elif i == 1 and fr_inv_obj.items.item_type_id == 1 and equiped_weapon <= MAX_EQUIPED_WEAPON:
+                    equiped_weapon += 1
+                    fr_inv_obj.is_equiped = True
+                    current_char.attack += fr_inv_obj.items.attack_armor
+                    update.message.reply_text(f'Оружие "{fr_inv_obj.items.name}" надето')
+                else:
+                    update.message.reply_text(f"""Надето слишком много предметов одного типа \n
 Максимум брони выбранного типа - {MAX_EQUIPED_ARMOR_I}
 Максимум оружия - {MAX_EQUIPED_WEAPON}""")
+        # Если оружие
+#        if fr_inv_obj.items.item_type_id == 1 and equiped_weapon <= MAX_EQUIPED_WEAPON:
+#            equiped_weapon += 1
+#            fr_inv_obj.is_equiped = True
+#            current_char.attack += fr_inv_obj.items.attack_armor
+#            update.message.reply_text(f'Оружие "{fr_inv_obj.items.name}" надето')
+#        else:
+#            update.message.reply_text(f"""Надето слишком много предметов одного типа \n
+#Максимум оружия - {MAX_EQUIPED_WEAPON}""")
     db_sess.commit()
     print('commit')
 
