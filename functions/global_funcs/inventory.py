@@ -30,7 +30,8 @@ def item_choose(update, context):
         if inv_obj.is_equiped:
             result += f'Надето \n'
         # Если предмет можно надеть
-        if int(item.item_type_id) == 1 or int(item.item_type_id) == 2:
+        if int(item.item_type_id) == 1 or int(item.item_type_id) == 2 or item.item_type_id == 4 \
+                or item.item_type_id == 5 or item.item_type_id == 6 :
             result += '/equip - надеть/снять \n'
         # Если предмет можно использовать
         else:
@@ -50,14 +51,14 @@ def item_choose(update, context):
 def item_interaction(update, context):
     text = update.message.text
     item, inv_obj = context.user_data['current_item']
-
     if text == '/back':
         pass
     # Выкинуть предмет
     elif text == '/drop':
         drop(update, context, item, inv_obj)
         update.message.reply_text('Предмет волшебным образом растворился у вас в руках')
-    elif item.item_type_id == 1 or item.item_type_id == 2:
+    elif item.item_type_id == 1 or item.item_type_id == 2 or item.item_type_id == 4 or item.item_type_id == 5 \
+            or item.item_type_id == 6 :
         if text == '/equip':
             equip(update, context, item, inv_obj)
     elif item.item_type_id == 3:
